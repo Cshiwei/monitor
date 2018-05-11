@@ -149,7 +149,7 @@ class CI_Controller {
         $this->smarty->assign('url',$url);
         $this->smarty->assign('stay',$stay);
 
-        $this->display('common/success.tpl');
+        $this->display('common/success');
     }
 
     /**csw
@@ -164,7 +164,7 @@ class CI_Controller {
         $this->smarty->assign('url',$url);
         $this->smarty->assign('stay',$stay);
 
-        $this->display('common/fail.tpl');
+        $this->display('common/fail');
     }
 
 }
