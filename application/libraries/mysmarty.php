@@ -11,7 +11,7 @@
  */
 
 
-class MySmarty {
+class mysmarty {
 
     public $mySmarty;
 
