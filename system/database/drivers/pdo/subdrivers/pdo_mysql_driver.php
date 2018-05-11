@@ -371,4 +371,12 @@ class CI_DB_pdo_mysql_driver extends CI_DB_pdo_driver {
 		return implode(', ', $this->qb_from);
 	}
 
+	/**csw
+     * 设置数据库编码
+     */
+	public function _db_set_charset($charset)
+    {
+        return $this->conn_id->query("set names {$charset};");
+    }
+
 }
