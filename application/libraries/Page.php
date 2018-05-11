@@ -7,7 +7,7 @@
  * Time: 10:34
  * 用于定制分类链接的类
  */
-class page
+class Page
 {
     /**基础url
      * @var
