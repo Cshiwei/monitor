@@ -103,6 +103,7 @@ class CI_Controller {
 	public function display($template = null, $cache_id = null, $compile_id = null, $parent = null)
     {
         $template.='.tpl';
+        $template = strtolower($template);
         $this->smarty->display($template, $cache_id, $compile_id, $parent);
     }
 
@@ -148,7 +149,7 @@ class CI_Controller {
         $this->smarty->assign('url',$url);
         $this->smarty->assign('stay',$stay);
 
-        $this->smarty->display('common/success.tpl');
+        $this->display('common/success.tpl');
     }
 
     /**csw
@@ -163,7 +164,7 @@ class CI_Controller {
         $this->smarty->assign('url',$url);
         $this->smarty->assign('stay',$stay);
 
-        $this->smarty->display('common/fail.tpl');
+        $this->display('common/fail.tpl');
     }
 
 }
