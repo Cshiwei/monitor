@@ -158,4 +158,43 @@ class Norm extends CI_Controller{
         $this->display('normdetail');
     }
 
+    /**csw
+     * norm折线图
+     */
+    public function lineChart()
+    {
+        $this->load->logic('normLogic');
+
+        $today = date('Y-m-d',time());
+        $todayStamp = strtotime($today);
+
+        $normId = $this->input->get('normId');
+        $beginDay = $this->input->post('beginDay');
+        $endDay = $this->input->post('endDay');
+
+        if(empty($beginDay))
+            $beginDay = date("Y-m-d",strtotime('-1 day',$todayStamp));
+
+        if(empty($endDay))
+            $endDay = $today;
+
+        $resLine = $this->normLogic->line($normId,$beginDay,$endDay);
+
+        if($resLine['errNo']!=0)
+            $this->fail($resLine['errMsg'],"/norm");
+        else
+        {
+            $info = $resLine['result']['info'];
+            $lineStr = json_encode($resLine['result']['lineArr']);
+            $legend = json_encode($resLine['result']['legend']);
+
+            $this->assign('info',$info);
+            $this->assign('legend',$legend);
+            $this->assign('lineStr',$lineStr);
+            $this->assign('beginDay',$beginDay);
+            $this->assign('endDay',$endDay);
+            $this->display('normLine');
+        }
+
+    }
 }

@@ -22,11 +22,11 @@ $config['slidebarLink'] = array(
         'val' => 'group',
         'link' => '/group',
     ),
-    /*'behavior' => array(
+    'behavior' => array(
         'name' => '行为',
         'val'  => 'behavior',
         'link' => '/behavior'
-    ),*/
+    ),
 );
 //控制侧边栏当前的选中栏目
 $config['slidebarActive'] = array(
@@ -42,8 +42,8 @@ $config['slidebarActive'] = array(
         'controller' => 'group',
         'active' => 'group',
     ),
-    /*'behavior' => array(
+    'behavior' => array(
         'controller' => 'behavior',
         'active' => 'behavior'
-    ),*/
+    ),
 );
