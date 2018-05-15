@@ -244,15 +244,17 @@ class NormLogic extends CI_Logic{
         return $this->returnMsg(0);
     }
 
-    private function addTestData()
+    public function addTestData()
     {
         $this->load->model('normModel');
         $a = array(1,2,3);
-        for ($i=1;$i<=100;$i++)
-        {   $key = array_rand($a,1);
-            $normId = $a[$key];
-            $value = rand(1,1000);
-            $normTime = rand(1525104000,1525924718);
+        for ($j=1526140800;$j<=1526356418;$j+=$add)
+        {   //$key = array_rand($a,1);
+            //$normId = $a[$key];
+            $normId = 7;
+            $value = rand(1000,3000);
+            $add = rand(600,1000);
+            $normTime = $j+$add;
             /*$data = array(
                 'normId' => $normId,
                 'value' => $value,
@@ -358,5 +360,132 @@ class NormLogic extends CI_Logic{
             );
         }
         return $this->returnMsg(0,$res);
+    }
+
+
+    public function lineChart($beginTime,$endTime)
+    {
+        $this->load->model('normModel');
+
+        $now = time();
+        $endTimeStamp = empty($endTime) ? $now : strtotime($endTime);
+
+        $beginTimeStamp = empty($beginTime) ? strtotime('-3 hour',$endTime) : strtotime($beginTime);
+
+        if($endTimeStamp <= $beginTimeStamp)
+            return $this->returnMsg('101','起始时间必须小于终止时间！');
+
+        $maxHour = 3;
+        $maxDiff = $maxHour * 60 * 60;
+        if($endTimeStamp - $beginTimeStamp > $maxDiff)
+            return $this->returnMsg('102',"时间跨度最大允许{$maxHour}小时");
+
+        $whereArr['beginTime'] = $beginTimeStamp;
+        $whereArr['endTime'] = $endTimeStamp;
+
+        $resNormCensus = $this->normModel->normCensus($whereArr);
+        if(!$resNormCensus)
+            return $this->returnMsg('103','未获取到指标统计信息');
+
+        $xArr = array();
+        $yArr = array();
+        foreach ($resNormCensus as $key=>$val)
+        {
+            $xArr[] = date('H:i:s',$val['normTime']);
+            $yArr[] = $val['value'];
+        }
+
+        $line['x'] = $xArr;
+        $line['y'] = $yArr;
+
+        return $this->returnMsg(0,$line);
+    }
+
+    public function line($normId,$beginDay,$endDay)
+    {
+        $this->load->model('normModel');
+        if(empty($normId))
+            return $this->returnMsg(101,'无效的指标ID');
+
+        $resNorm = $this->normModel->getNormInfo($normId);
+        if(!$resNorm)
+            return $this->returnMsg(201,'未获取到指标信息');
+
+        $resNorm['unitShow'] = $this->getUnitShow($resNorm['unit']);
+
+        if(empty($beginDay))
+            return $this->returnMsg(102,'请指定起始日期');
+
+        if(empty($endDay))
+            return $this->returnMsg(103,'请指定终止日期');
+
+        $beginTime = strtotime($beginDay);
+        $endTime = strtotime('+1 day',strtotime($endDay));
+
+        $maxDay = 5;
+        if($endTime - $beginTime > $maxDay * 24 * 3600)
+            return $this->returnMsg(104,"最大时间区间不可以超过{$maxDay}天");
+
+        $dayArr = array();
+        $legend = array();
+        for($i=$beginTime;$i<$endTime;$i+=24 * 3600)
+        {
+            //$dayArr[] = date('Y-m-d',$i);
+            $bTime = $i;
+            $eTime = $bTime + 24 * 3600;
+            $whereArr['beginTime'] = $bTime;
+            $whereArr['endTime'] = $eTime;
+
+            $resCensus = $this->normModel->normCensus($whereArr,'','',array('normTime'=>'ASC'));
+            if($resCensus)
+            {
+                $legend[] = date('Y-m-d',$i);
+                $censusData = array();
+                foreach ($resCensus as $key=>$val)
+                {
+                    $censusData[$key][] = strtotime(date('H:i:s',$val['normTime'])) * 1000;
+                    $censusData[$key][] = $val['value'];
+                }
+                $dayArr[] = array(
+                    'name' => date('Y-m-d',$i),
+                    'type' => 'line',
+                    'showAllSymbol' => true,
+                    'data' => $censusData,
+                    'symbolSize' => 10,
+                );
+            }
+        }
+        $dayArr[0]['markLine'] = array(
+                                        'data' => array(
+                                            array(
+                                                'name' => '阈值',
+                                                'yAxis'=>$resNorm['threshold'],
+                                                'tooltip' => array(
+                                                    'show' => false,
+                                                )
+                                            ),
+                                        ),
+                                        'label' => array(
+                                            'formatter' => "{b}: {$resNorm['threshold']}",
+                                        )
+                                         );
+        if(empty($dayArr))
+            $this->returnMsg('105','未获取到指标统计信息');
+
+        $res = array(
+            'info' => $resNorm,
+            'legend' => $legend,
+            'lineArr' => $dayArr,
+        );
+        return $this->returnMsg(0,$res);
+    }
+
+
+    public function getUnitShow($unit)
+    {
+        $this->config->load('norm');
+        $unitArr = $this->config->item('unit');
+
+        return isset($unitArr[$unit]) ? $unitArr[$unit]['name'] : '';
     }
 }

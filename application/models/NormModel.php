@@ -131,13 +131,30 @@ class NormModel extends CI_Model{
          return $this->db->query($sql)->result_array();
      }
 
-     public function normCensus($whereArr,$offset,$limit)
+     public function normCensus($whereArr,$offset='',$limit='',$orderByArr=array())
      {
          $whereStr = $this->normCensusWhere($whereArr);
+         if(empty($offset) && empty($limit))
+             $limitStr = "";
+         else
+             $limitStr = " LIMIT {$offset},{$limit}";
+
+         if(empty($orderByArr))
+             $orderStr = ' ORDER BY `normTime` DESC';
+         else
+         {
+             $orderStr = ' ORDER BY ';
+             foreach ($orderByArr as $key=>$val)
+             {
+                 $orderStr.="`{$key}` {$val},";
+             }
+             $orderStr = trim($orderStr,',');
+         }
+
          $sql ="SELECT * FROM `{$this->db->dbprefix('norm_census')}` 
                 {$whereStr} 
-                ORDER BY `normTime` DESC
-                LIMIT {$offset},{$limit}";
+                {$orderStr}
+                {$limitStr}";
 
          return $this->db->query($sql)->result_array();
      }
@@ -170,6 +187,12 @@ class NormModel extends CI_Model{
 
              if(isset($whereArr['normId']))
                  $where[] = "`normId`='{$whereArr['normId']}'";
+
+             if(isset($whereArr['beginTime']))
+                 $where[] = "`normTime`>='{$whereArr['beginTime']}'";
+
+             if(isset($whereArr['endTime']))
+                 $where[] = "`normTime`<='{$whereArr['endTime']}'";
 
              $whereStr = empty($where) ? '' : " WHERE ".implode(' AND ',$where);
          }

@@ -28,4 +28,19 @@ class Api extends CI_Controller{
         $this->normLogic->addTestData();
     }
 
+    private function test()
+    {
+        $normValue = $this->input->get('normValue');
+        $curl = curl_init();
+        curl_setopt($curl,CURLOPT_URL,'http://monitor.litb-test.com/api/addNormCensus');
+        $data = array(
+            'normId' => '7',
+            'normValue' => $normValue,
+            'normTime' => time(),
+        );
+        curl_setopt($curl,CURLOPT_POST,1);
+        curl_setopt($curl,CURLOPT_POSTFIELDS,$data);
+        curl_exec($curl);
+        curl_close($curl);
+    }
 }

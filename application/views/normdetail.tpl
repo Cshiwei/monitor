@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>编辑指标</title>
+    <title>指标详情</title>
 
     <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 </head>
@@ -20,12 +20,21 @@
             <div class="row">
                 <div class="col-xs-12">
                     <div class="page-header">
+                        <div class="dropdown pull-right">
+                            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Action
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                                <li><a href="/norm/lineChart?normId=<{$info.id}>">lineChart</a></li>
+                            </ul>
+                        </div>
                         <h4><{$info.name}><small> 详情</small></h4>
                     </div>
                 </div>
             </div>
             <div class="row">
-                <div class="col-xs-5">
+                <div class="col-xs-9">
                     <p>
                     <form class="form-inline" method="get" action="/norm/normDetail">
                     <input type="hidden" name="normId" value="<{$info.id}>"/>
@@ -69,35 +78,4 @@
 <script src="/static/js/jquery.min.js"></script>
 <script src="/static/bootstrap/js/bootstrap.min.js"></script>
 <script src="/static/js/echarts.min.js"></script>
-<script>
-    <{if $lineChart}>
-    $(function(){
-        // 基于准备好的dom，初始化echarts实例
-        var myChart = echarts.init(document.getElementById('main'));
-
-        // 指定图表的配置项和数据
-        var option = {
-            xAxis: {
-                type: 'category',
-                data: [<{$lineChart.x}>]
-            },
-            yAxis: {
-                type: 'value'
-            },
-            series: [{
-                data: [<{$lineChart.y}>],
-                type: 'line',
-                markLine: {
-                    data: [
-                        {type: 'average', name: '平均值'},
-                        {name: '阈值', yAxis:<{$info.threshold}>},
-                    ]
-                }
-            }]
-        };
-        // 使用刚指定的配置项和数据显示图表。
-        myChart.setOption(option);
-    })
-    <{/if}>
-</script>
 </html>
