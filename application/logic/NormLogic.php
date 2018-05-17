@@ -488,4 +488,9 @@ class NormLogic extends CI_Logic{
 
         return isset($unitArr[$unit]) ? $unitArr[$unit]['name'] : '';
     }
+
+    public function getBehavior($normId)
+    {
+
+    }
 }
