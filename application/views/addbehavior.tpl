@@ -4,7 +4,6 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>添加行为</title>
-
     <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
@@ -50,6 +49,13 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label for="desc" class="col-xs-2 control-label">描述</label>
+                    <div class="col-xs-10">
+                        <textarea name="desc" class="form-control" id="desc" rows="3"></textarea>
+                    </div>
+                </div>
+                <!--
+                <div class="form-group">
                     <label for="" class="col-xs-2 control-label">行为类型</label>
                     <div class="col-xs-5">
                     <{foreach $behaviorType as $key=>$val}>
@@ -59,6 +65,18 @@
                     <{/foreach}>
                     </div>
                 </div>
+                -->
+                <div class="form-group" id="itemGroup">
+                    <label for="normId" class="col-xs-2 control-label">触发条件</label>
+                    <div class="col-xs-5">
+                        <select class="form-control" id="normId" name="normId" title="指标ID">
+                            <{foreach $allNorm as $key=>$val}>
+                                <option  value="<{$val.id}>"><{$val.name}>&nbsp;&nbsp;&nbsp;&nbsp;<{$val.thresholdShow}></option>
+                            <{/foreach}>
+                        </select>
+                    </div>
+                </div>
+                <!--
                 <div class="form-group" >
                     <label for="trigger" class="col-xs-2 control-label">触发条件</label>
                     <div class="col-xs-5">
@@ -69,16 +87,108 @@
                         </select>
                     </div>
                 </div>
-                <div class="form-group" id="itemGroup">
-                    <label for="normId" class="col-xs-2 control-label">触发项目</label>
-                    <div class="col-xs-5">
-                        <select class="form-control" id="normId" name="normId" title="指标ID">
-                            <{foreach $allNorm as $key=>$val}>
-                                <option  value="<{$val.id}>"><{$val.name}>&nbsp;&nbsp;&nbsp;&nbsp;<{$val.thresholdShow}></option>
-                            <{/foreach}>
+                -->
+                <div class="form-group">
+                    <label for="jobType" class="col-xs-2 control-label">任务类型</label>
+                    <div class="col-xs-2">
+                        <select id="jobType" name="jobType" class="form-control">
+                                <option class="form-control" data-param="emailFm" value="1">发邮件</option>
+                                <option class="form-control" data-param="commondFm" value="2">执行命令</option>
+                                <option class="form-control" data-param="methodFm" value="3">执行方法</option>
+                                <option class="form-control" data-param="apiFm" value="4">调用接口</option>
                         </select>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <hr/>
+                    </div>
+                </div>
+                <div id="paramFm">
+
+                </div>
+                <div class="param hidden">
+                    <div id="emailFm">
+                        <!-- 邮件参数-->
+                        <div class="form-group emailFm">
+                            <label for="jobType" class="col-xs-2 control-label">邮件标题</label>
+                            <div class="col-xs-4">
+                                <input class="form-control" type="text" name="eamilTitle"/>
+                            </div>
+                        </div>
+                        <div class="form-group emailFm">
+                            <label for="jobType" class="col-xs-2 control-label">收件人</label>
+                            <div class="col-xs-6">
+                                <textarea name="desc" class="form-control" id="desc" rows="3"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group emailFm">
+                            <label for="jobType" class="col-xs-2 control-label">邮件内容</label>
+                            <div class="col-xs-7">
+                                <textarea name="desc" class="form-control" id="desc" rows="3"></textarea>
+                            </div>
+                        </div>
+                        <!-- 邮件参数 -->
+                    </div>
+
+                    <div id="apiFm">
+                        <!--调用接口-->
+                        <div class="form-group apiFm">
+                            <label for="jobType" class="col-xs-2 control-label">接口地址</label>
+                            <div class="col-xs-4">
+                                <input class="form-control" type="text" name="eamilTitle"/>
+                            </div>
+                        </div>
+                        <div class="form-group apiFm">
+                            <label for="jobType" class="col-xs-2 control-label">方法</label>
+                            <div class="col-xs-4">
+                                <select class="form-control">
+                                    <option>GET</option>
+                                    <option>POST</option>
+                                    <option>DELETE</option>
+                                    <option>PUT</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group apiFm">
+                            <label class="col-xs-2 control-label" for="">参数</label>
+                            <div class="col-xs-5">
+                                <textarea name="desc" class="form-control" id="desc" rows="3"></textarea>
+                            </div>
+                        </div>
+                        <!--调用接口-->
+                    </div>
+
+                    <div id="methodFm">
+                        <!--调用方法-->
+                        <div class="form-group methodFm">
+                            <label for="jobType" class="col-xs-2 control-label">方法名称</label>
+                            <div class="col-xs-4">
+                                <input class="form-control" type="text" name="eamilTitle"/>
+                            </div>
+                        </div>
+                        <div class="form-group methodFm">
+                            <label class="col-xs-2 control-label" for="">参数</label>
+                            <div class="col-xs-5">
+                                <textarea name="desc" class="form-control" id="desc" rows="3"></textarea>
+                            </div>
+                        </div>
+                        <!--调用方法-->
+                    </div>
+
+                    <div id="commondFm">
+                        <!--命令行-->
+                        <div class="form-group commondFm">
+                            <label for="jobType" class="col-xs-2 control-label">命令行</label>
+                            <div class="col-xs-7">
+                                <input class="form-control" type="text" name="eamilTitle"/>
+                            </div>
+                        </div>
+                        <!--命令行-->
+                    </div>
+                </div>
+
+                <!--
                 <div class="form-group">
                     <label for="jobType" class="col-xs-2 control-label">任务</label>
                     <div class="col-xs-2">
@@ -92,12 +202,7 @@
                         <input class="form-control" type="text" id="jobName" name="jobName" placeholder="sendEmail"/>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="desc" class="col-xs-2 control-label">描述</label>
-                    <div class="col-xs-10">
-                        <textarea name="desc" class="form-control" id="desc" rows="3"></textarea>
-                    </div>
-                </div>
+                -->
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
                         <button type="button" id="addBehavior" class="btn btn-primary">提交</button>
@@ -165,10 +270,15 @@
 
     //变更行为类型，更改表单
     $(function(){
-       $("input[name='behaviorType']").change(function(){
-            $("#itemGroup").fadeToggle("normal");
-       });
+       $("#jobType").change(function(){
+           var param = $("#jobType option:selected").data('param');
+           var html = $("#"+param).html();
+           $("#paramFm").html(html);
+       })
+
+        $("#jobType").change();
     })
+
 
 </script>
 </html>

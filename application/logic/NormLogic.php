@@ -248,12 +248,12 @@ class NormLogic extends CI_Logic{
     {
         $this->load->model('normModel');
         $a = array(1,2,3);
-        for ($j=1526140800;$j<=1526356418;$j+=$add)
+        for ($j=1526745600;$j<=1526980719;$j+=$add)
         {   //$key = array_rand($a,1);
             //$normId = $a[$key];
             $normId = 7;
             $value = rand(1000,3000);
-            $add = rand(600,1000);
+            $add = rand(300,1000);
             $normTime = $j+$add;
             /*$data = array(
                 'normId' => $normId,
@@ -428,6 +428,7 @@ class NormLogic extends CI_Logic{
 
         $dayArr = array();
         $legend = array();
+        $zoomStartArr = array();
         for($i=$beginTime;$i<$endTime;$i+=24 * 3600)
         {
             //$dayArr[] = date('Y-m-d',$i);
@@ -435,6 +436,7 @@ class NormLogic extends CI_Logic{
             $eTime = $bTime + 24 * 3600;
             $whereArr['beginTime'] = $bTime;
             $whereArr['endTime'] = $eTime;
+            $whereArr['normId'] = $resNorm['id'];
 
             $resCensus = $this->normModel->normCensus($whereArr,'','',array('normTime'=>'ASC'));
             if($resCensus)
@@ -446,6 +448,7 @@ class NormLogic extends CI_Logic{
                     $censusData[$key][] = strtotime(date('H:i:s',$val['normTime'])) * 1000;
                     $censusData[$key][] = $val['value'];
                 }
+                $zoomStartArr[] = 20/count($censusData) > 1 ? 0 : (1 - round(20/count($censusData),2)) * 100;
                 $dayArr[] = array(
                     'name' => date('Y-m-d',$i),
                     'type' => 'line',
@@ -455,6 +458,7 @@ class NormLogic extends CI_Logic{
                 );
             }
         }
+        $zoomStart = max($zoomStartArr);
         $dayArr[0]['markLine'] = array(
                                         'data' => array(
                                             array(
@@ -476,6 +480,7 @@ class NormLogic extends CI_Logic{
             'info' => $resNorm,
             'legend' => $legend,
             'lineArr' => $dayArr,
+            'zoomStart' => $zoomStart,
         );
         return $this->returnMsg(0,$res);
     }

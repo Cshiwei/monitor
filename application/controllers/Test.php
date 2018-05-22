@@ -70,4 +70,10 @@ class Test extends CI_Controller{
         $this->email->send();
         echo $this->email->print_debugger();
     }
+
+    private function addTestData()
+    {
+        $this->load->logic('normLogic');
+        $this->normLogic->addTestData();
+    }
 }
