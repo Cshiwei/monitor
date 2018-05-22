@@ -13,9 +13,9 @@ class Api extends CI_Controller{
         $this->load->logic('normLogic');
         $this->load->logic('registerLogic');
 
-        $normId = $this->input->post('normId');
-        $normValue = $this->input->post('normValue');
-        $normTime = $this->input->post('normTime');
+        $normId = $this->input->get('normId');
+        $normValue = $this->input->get('normValue');
+        $normTime = $this->input->get('normTime');
 
         $resAdd = $this->normLogic->addNormCensus($normId,$normValue,$normTime);
         header('Content-type:application/json');
