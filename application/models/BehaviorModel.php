@@ -76,4 +76,46 @@ class BehaviorModel extends CI_Model{
 
         return $this->db->trans_complete();
     }
+
+    public function getBehaviorByNormId($normId)
+    {
+        $sql ="SELECT * FROM `{$this->db->dbprefix('behavior')}` WHERE `behaviorType`=2 AND `normId`={$normId} AND `status`=1";
+        return $this->db->query($sql)->result_array();
+    }
+
+    public function getSysBehavior()
+    {
+        $sql ="SELECT * FROM `{$this->db->dbprefix('behavior')}` WHERE `behaviorType`=1 AND `status`=1";
+        return $this->db->query($sql)->result_array();
+    }
+
+    public function enableBehavior($id)
+    {
+        $data = array(
+            'status' => 1,
+        );
+        return $this->db->update('behavior',$data,array('id'=>$id));
+    }
+
+    public function disabledBehavior($id)
+    {
+        $data = array(
+            'status' => 0,
+        );
+        return $this->db->update('behavior',$data,array('id'=>$id));
+    }
+
+    public function beginTaskLog($data)
+    {
+        $res = $this->db->insert('task_log',$data);
+        if($res)
+            return $this->db->insert_id();
+
+        return false;
+    }
+
+    public function endTaskLog($logId,$data)
+    {
+        $this->db->update('task_log',$data,array('id'=>$logId));
+    }
 }

@@ -27,7 +27,9 @@
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
                                 <li><a href="/norm/lineChart?normId=<{$info.id}>">图表</a></li>
+                                <!--
                                 <li><a href="/norm/joinBehavior?normId=<{$info.id}>">关联行为</a></li>
+                                -->
                             </ul>
                         </div>
                         <h4><{$info.name}><small> 详情</small></h4>

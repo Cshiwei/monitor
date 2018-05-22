@@ -26,21 +26,39 @@
                                 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                                <li>
+                                    <{if $info.status eq 0}>
+                                        <a data-id="<{$info.id}>" id="enableBehavior">启用</a>
+                                    <{else}>
+                                        <a data-id="<{$info.id}>" id="disabledBehavior">禁用</a>
+                                    <{/if}>
+                                </li>
                                 <li><a data-name="<{$info.name}>" data-id="<{$info.id}>" id="delBehavior" data-toggle="modal" data-target="#delBehaviorModal">删除</a></li>
                             </ul>
                         </div>
-                        <h4><{$info.name}><small> <{$info.jobNameShow}></small></h4>
+                        <h4><{$info.name}><small></small></h4>
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-xs-12">
+                    <p>状态：<{$info.statusShow}></p>
+                    <p>行为类型:<{$info.behaviorTypeShow}></p>
+                    <{if $info.behaviorType eq 2}>
+                        <p>触发指标:<{$info.norm}></p>
+                    <{/if}>
+                    <p>条件：<{$info.triggerShow}></p>
                     <p>描述：<{$info.desc}></p>
                 </div>
             </div>
             <div class="row">
                 <div class="col-xs-12">
                     <hr/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+
                 </div>
             </div>
         </div>
@@ -77,6 +95,7 @@
 </body>
 <script src="/static/js/jquery.min.js"></script>
 <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+<script src="/static/js/common.js"></script>
 <script>
     $(function(){
         //模态框展示之后操作 将操作参数赋值到模态框
@@ -87,6 +106,35 @@
             $("#showBehavior").text(name);
             $("#behaviorId").val(id);
         })
+    })
+
+    $(function(){
+        $("#enableBehavior").click(function(){
+            var id = $(this).data("id");
+            var url = "/behavior/enableBehavior";
+            $.post(url,{id:id},function(res){
+                if(res.errNo===0){
+                    myAlert("启用成功,即将刷新页面");
+                    setTimeout("window.location.reload()",2000);
+                }else{
+                    myAlert(res.errMsg);
+                }
+            })
+        })
+
+        $("#disabledBehavior").click(function(){
+            var id = $(this).data("id");
+            var url = '/behavior/disabledBehavior';
+            $.post(url,{id:id},function(res){
+                if(res.errNo===0){
+                    myAlert("禁用成功，即将刷新页面");
+                    setTimeout("window.location.reload()",2000);
+                }else{
+                    myAlert(res.errMsg);
+                }
+            })
+        })
+
     })
 </script>
 </html>

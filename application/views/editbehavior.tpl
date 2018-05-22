@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>编辑指标</title>
+    <title>编辑行为</title>
 
     <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 </head>
@@ -21,6 +21,7 @@
                 <div class="col-xs-12">
                     <div class="page-header">
                         <div class="dropdown pull-right">
+                            <!--
                             <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Action
                                 <span class="caret"></span>
@@ -29,6 +30,7 @@
                                 <li><a href="/behavior/runBehavior?id=">详情</a></li>
                                 <li><a href="/behavior">列表</a></li>
                             </ul>
+                            -->
                         </div>
                         <h4>编辑行为<small></small></h4>
                     </div>
@@ -49,19 +51,46 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="type" class="col-xs-2 control-label">类型</label>
-                    <div class="col-xs-3">
-                        <select id="type" name="type" class="form-control">
-                            <{foreach $typeArr as $key=>$val}>
-                                <option <{if $info.type eq $val['val']}>selected<{/if}> value="<{$val.val}>"><{$val.name}></option>
+                    <label for="" class="col-xs-2 control-label">行为类型</label>
+                    <div class="col-xs-5">
+                        <{foreach $behaviorTypeArr as $key=>$val}>
+                            <label class="radio-inline">
+                                <input <{if $info.behaviorType eq $val.val}>checked<{/if}> type="radio" name="behaviorType" value="<{$val.val}>"> <{$val.name}>
+                            </label>
+                        <{/foreach}>
+                    </div>
+                </div>
+                <div class="form-group" >
+                    <label for="trigger" class="col-xs-2 control-label">触发条件</label>
+                    <div class="col-xs-5">
+                        <select id="trigger" name="trigger" id="" class="form-control">
+                            <{foreach $trigger as $key=>$val}>
+                                <option <{if $info.trigger eq $val.val}>selected<{/if}> value="<{$val.val}>" title="<{$val.desc}>" ><{$val.name}></option>
+                            <{/foreach}>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group" id="itemGroup" <{if $info.behaviorType eq 1}>style="display: none;"<{/if}> >
+                    <label for="normId" class="col-xs-2 control-label">触发项目</label>
+                    <div class="col-xs-5">
+                        <select class="form-control" id="normId" name="normId" title="指标ID">
+                            <{foreach $allNorm as $key=>$val}>
+                                <option <{if $info.normId eq $val.id}>selected<{/if}> value="<{$val.id}>"><{$val.name}>&nbsp;&nbsp;&nbsp;&nbsp;<{$val.thresholdShow}></option>
                             <{/foreach}>
                         </select>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="jobName" class="col-xs-2 control-label">方法/脚本</label>
-                    <div class="col-xs-5">
-                        <input class="form-control" type="text" id="jobName" name="jobName" value="<{$info.jobName}>"/>
+                    <label for="jobType" class="col-xs-2 control-label">任务</label>
+                    <div class="col-xs-2">
+                        <select id="jobType" name="jobType" class="form-control">
+                            <{foreach $jobType as $key=>$val}>
+                                <option class="form-control" value="<{$val.val}>"><{$val.name}></option>
+                            <{/foreach}>
+                        </select>
+                    </div>
+                    <div class="col-xs-3">
+                        <input class="form-control" value="<{$info.jobName}>" type="text" id="jobName" name="jobName" />
                     </div>
                 </div>
                 <div class="form-group">
@@ -90,9 +119,11 @@
 
             var id = $("#id").val();
             var name = $("#name").val();
-            var type = $("#type").val();
+            var behaviorType = $("input[name='behaviorType']:checked").val();
+            var trigger = $("#trigger").val();
+            var normId = $("#normId").val();
+            var jobType = $("#jobType").val();
             var jobName = $("#jobName").val();
-            var param = $("#param").val();
             var desc = $("#desc").val();
 
             if(name===''){
@@ -113,23 +144,34 @@
                 return false;
             }
 
-            var url ="/behavior/edit"
+            var url ="/behavior/edit";
+            $("#editBehavior").attr('disabled','disabled');
             $.post(url,{
                 id:id,
                 name:name,
-                type:type,
+                behaviorType:behaviorType,
+                trigger:trigger,
+                normId:normId,
+                jobType:jobType,
                 jobName:jobName,
-                param:param,
                 desc:desc,
             },function(res){
                 if(res.errNo===0){
-                    addAlert(alertObj,'更新成功，即将跳转','success');
-                    setTimeout("location.href='/behavior'",1000);
+                    addAlert(alertObj,'更新成功，该行为已被禁用，请确认无误后手动启用','success');
+                    setTimeout("location.href='/behavior'",3000);
                 }else{
+                    $("#editBehavior").removeAttr('disabled');
                     addAlert(alertObj,res.errMsg);
                 }
             });
         })
+    })
+
+    //变更行为类型，更改表单
+    $(function(){
+        $("input[name='behaviorType']").change(function(){
+            $("#itemGroup").fadeToggle("normal");
+        });
     })
 </script>
 </html>

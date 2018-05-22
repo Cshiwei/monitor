@@ -26,6 +26,7 @@
                 <td>名称</td>
                 <td>任务</td>
                 <td>描述</td>
+                <td>状态</td>
                 <td>操作</td>
                 </th>
                 <tbody>
@@ -36,10 +37,18 @@
                         <td><{$val.name}></td>
                         <td><{$val.jobNameShow}></td>
                         <td class="td-hidden"><{$val.desc}></td>
+                        <td><{$val.statusShow}></td>
                         <td>
                             <!--
                     <a class="btn btn-default btn-xs effect-norm" href="/effect?norm=<{$val.name}>" data-id="<{$val.id}>" role="button">影响</a>
                     -->
+                            <!--
+                            <{if $val.status eq 0}>
+                                <a class="btn btn-default btn-xs" id="enableBehavior" data-id="<{$val.id}> ">启用</a>
+                            <{else}>
+                                <a class="btn btn-default btn-xs" id="disabledBehavior" data-id="<{$val.id}> ">禁用</a>
+                            <{/if}>
+                            -->
                             <a class="btn btn-default btn-xs" href="/behavior/detail?id=<{$val.id}>" role="button">详情</a>
                             <a class="btn btn-default btn-xs edit-norm" data-id="<{$val.id}>" href="/behavior/edit?id=<{$val.id}>" role="button">编辑</a>
                         </td>
@@ -56,4 +65,7 @@
 </body>
 <script src="/static/js/jquery.min.js"></script>
 <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+<script src="/static/js/common.js"></script>
+<script>
+</script>
 </html>

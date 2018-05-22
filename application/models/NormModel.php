@@ -198,4 +198,16 @@ class NormModel extends CI_Model{
          }
          return $whereStr;
      }
+
+     public function getAllNorm()
+     {
+         $sql ="SELECT * FROM `{$this->db->dbprefix('norm')}` ORDER BY `name` ASC";
+         return $this->db->query($sql)->result_array();
+     }
+
+     public function getNormByName($name)
+     {
+         $sql ="SELECT * FROM `{$this->db->dbprefix('norm')}` WHERE `name`='{$name}'";
+         return $this->db->query($sql)->row_array();
+     }
 }

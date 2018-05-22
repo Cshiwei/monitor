@@ -5,9 +5,9 @@
  * Date: 2018/5/15
  * Time: 18:41
  */
-$config['type'] = array(
+$config['jobType'] = array(
     '1' => array(
-        'name' => '控制器-方法',
+        'name' => '方法',
         'list' => 'Method',
         'val' => 1,
     ),
@@ -18,53 +18,62 @@ $config['type'] = array(
     )*/
 );
 
-$config['triggerType'] = array(
+$config['behaviorType'] = array(
     '1' => array(
-          'name' => '指标',
-          'val' => 1,
-      ),
-    '2' => array(
-        'name' => '影响',
-        'val' => 2,
+        'name' => '系统',
+        'val' => 1,
+        'desc' => '行为对所有item生效',
+        'default' => 0,
     ),
-    '3' => array(
-        'name' => '手动',
-        'val' => 3,
+    '2' => array(
+        'name' => '自定义',
+        'val' => 2,
+        'desc' => '仅对指定item生效',
+        'default' => 1,
     ),
 );
 
+$config['status'] = array(
+    0  => array(
+        'name' => '禁用中',
+        'val' => 0,
+    ),
+    1 => array(
+        'name' => '已启用',
+        'val' => 1,
+    ),
+);
+
+
 $config['trigger'] = array(
     1 => array(
-        'name' => '指标超出阈值',
+        'name' => '接收到指标数据',
         'val' => 1,
-        'desc' => '指标超出阈值，即触发行为',
-        'type' => 1,
+        'desc' => '只要接口接收到请求就触发',
     ),
     2 => array(
-        'name' => '添加指标数据失败',
-        'val'  => '2',
-        'desc' => '成功调用接口，但并未成功将数据存入数据库',
-        'type' => 1,
+        'name' => '成功添加指标数据',
+        'val'  => 2,
+        'desc' => '成功将指标数据存入数据库',
     ),
     3 => array(
-        'name' => '其中一个指标超出阈值',
-        'val' => '1',
-        'desc' => '某个影响中仅有一个指标超出阈值',
-        'type' => 2,
+        'name' => '添加指标数据失败',
+        'val' => 3,
+        'desc' => '未成功将指标数据存入数据库',
     ),
     4 => array(
-        'name' => '所有指标超出阈值',
-        'val' => '2',
-        'desc' => '某个影响所有指标都超出阈值',
-        'type' => 2,
+        'name' => '指标数据正常',
+        'val' => 4,
+        'desc' => '指标数据正常，未超出阈值',
     ),
     5 => array(
-        'name' => '手动',
-        'val' => '2',
-        'desc' => '手动执行某个任务',
-        'type' => 3,
-    )
+        'name' => '超出阈值',
+        'val' => 5,
+        'desc' => '指标数据超出阈值',
+    ),
 );
+
+
 
 
 

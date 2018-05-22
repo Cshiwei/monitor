@@ -21,6 +21,7 @@
                 <div class="col-xs-12">
                     <div class="page-header">
                         <div class="dropdown pull-right">
+                            <!--
                             <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Action
                                 <span class="caret"></span>
@@ -29,6 +30,7 @@
                                 <li><a href="/behavior/runBehavior?id=">运行</a></li>
                                 <li><a href="/behavior">列表</a></li>
                             </ul>
+                            -->
                         </div>
                         <h4>添加行为<small> </small></h4>
                     </div>
@@ -48,38 +50,41 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="name" class="col-xs-2 control-label">触发条件</label>
-                    <div class="col-xs-3">
-                        <select id="type" name="TriggerType" id="" class="form-control">
-                            <{foreach $triggerType as $key=>$val}>
-                                <optgroup label="<{$val.name}>">
-                                    <{foreach $trigger as $ke=>$va}>
-                                        <{if $va.type eq $val.val}>
-                                            <option value="<{$val.val}>_<{$va.val}>"><{$va.name}></option>
-                                        <{/if}>
-                                    <{/foreach}>
-                                </optgroup>
+                    <label for="" class="col-xs-2 control-label">行为类型</label>
+                    <div class="col-xs-5">
+                    <{foreach $behaviorType as $key=>$val}>
+                        <label class="radio-inline">
+                            <input <{if $val.default}>checked<{/if}> type="radio" name="behaviorType" value="<{$val.val}>"> <{$val.name}>
+                        </label>
+                    <{/foreach}>
+                    </div>
+                </div>
+                <div class="form-group" >
+                    <label for="trigger" class="col-xs-2 control-label">触发条件</label>
+                    <div class="col-xs-5">
+                        <select id="trigger" name="trigger" id="" class="form-control">
+                            <{foreach $trigger as $key=>$val}>
+                                <option value="<{$val.val}>" title="<{$val.desc}>" ><{$val.name}></option>
+                            <{/foreach}>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group" id="itemGroup">
+                    <label for="normId" class="col-xs-2 control-label">触发项目</label>
+                    <div class="col-xs-5">
+                        <select class="form-control" id="normId" name="normId" title="指标ID">
+                            <{foreach $allNorm as $key=>$val}>
+                                <option  value="<{$val.id}>"><{$val.name}>&nbsp;&nbsp;&nbsp;&nbsp;<{$val.thresholdShow}></option>
                             <{/foreach}>
                         </select>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="name" class="col-xs-2 control-label">触发项目</label>
-                    <div class="col-xs-3">
-                        <select id="type" name="TriggerType" id="" class="form-control">
-                            <{foreach $triggerType as $key=>$val}>
-                                <option value="<{$val.val}>"><{$val.name}></option>
-                            <{/foreach}>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="type" class="col-xs-2 control-label">任务</label>
+                    <label for="jobType" class="col-xs-2 control-label">任务</label>
                     <div class="col-xs-2">
-                        <select id="type" name="type" class="form-control">
-                            <{foreach $typeArr as $key=>$val}>
-                                <option value="<{$val.val}>"><{$val.name}></option>
+                        <select id="jobType" name="jobType" class="form-control">
+                            <{foreach $jobType as $key=>$val}>
+                                <option class="form-control" value="<{$val.val}>"><{$val.name}></option>
                             <{/foreach}>
                         </select>
                     </div>
@@ -113,9 +118,11 @@
             var alertObj = $("#alertDom");
 
             var name = $("#name").val();
-            var type = $("#type").val();
+            var behaviorType = $("input[name='behaviorType']:checked").val();
+            var trigger = $("#trigger").val();
+            var normId = $("#normId").val();
+            var jobType = $("#jobType").val();
             var jobName = $("#jobName").val();
-            var param = $("#param").val();
             var desc = $("#desc").val();
 
             if(name===''){
@@ -139,9 +146,11 @@
             var url ="/behavior/add"
             $.post(url,{
                 name:name,
-                type:type,
+                behaviorType:behaviorType,
+                trigger:trigger,
+                normId:normId,
+                jobType:jobType,
                 jobName:jobName,
-                param:param,
                 desc:desc,
             },function(res){
                 if(res.errNo===0){
@@ -153,5 +162,13 @@
             });
         })
     })
+
+    //变更行为类型，更改表单
+    $(function(){
+       $("input[name='behaviorType']").change(function(){
+            $("#itemGroup").fadeToggle("normal");
+       });
+    })
+
 </script>
 </html>

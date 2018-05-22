@@ -35,26 +35,40 @@ class Behavior extends CI_Controller{
     public function add()
     {
         $this->load->logic('behaviorLogic');
+        $this->load->logic('normLogic');
         if($this->isAjax)
         {
-            $name = $this->input->post('name');
-            $type = $this->input->post('type');
-            $job = $this->input->post('jobName');
-            $desc = $this->input->post('desc');
+            $action = $this->input->post('action');
+            switch($action)
+            {
+                default :
+                    $name = $this->input->post('name');
+                    $behaviorType = $this->input->post('behaviorType');
+                    $trigger = $this->input->post('trigger');
+                    $normId = $this->input->post('normId');
+                    $jobType = $this->input->post('jobType');
+                    $jobName = $this->input->post('jobName');
+                    $desc = $this->input->post('desc');
 
-            $resAdd = $this->behaviorLogic->addBehavior($name,$type,$job,$desc);
+                    $res = $this->behaviorLogic->addBehavior($name,$behaviorType,$trigger,$normId,$jobType,$jobName,$desc);
+            }
             header('Content-type:application/json');
-            echo json_encode($resAdd);
+            echo json_encode($res);
         }
         else
         {
             $this->config->load('behavior');
             $typeArr = $this->config->item('type');
-            $triggerType = $this->config->item('triggerType');
             $trigger = $this->config->item('trigger');
+            $jobType = $this->config->item('jobType');
+            $behaviorType = $this->config->item('behaviorType');
+            $resAllNorm = $this->normLogic->getAllNorm();
+            $allNorm = $resAllNorm['errNo']==0 ? $resAllNorm['result'] : array();
 
+            $this->assign('behaviorType',$behaviorType);
+            $this->assign('allNorm',$allNorm);
+            $this->assign('jobType',$jobType);
             $this->assign('trigger',$trigger);
-            $this->assign('triggerType',$triggerType);
             $this->assign('typeArr',$typeArr);
             $this->display('addbehavior');
         }
@@ -63,15 +77,20 @@ class Behavior extends CI_Controller{
     public function edit()
     {
         $this->load->logic('behaviorLogic');
+        $this->load->logic('normLogic');
         if($this->isAjax)
         {
             $id = $this->input->post('id');
             $name = $this->input->post('name');
-            $type = $this->input->post('type');
-            $job = $this->input->post('jobName');
+            $behaviorType = $this->input->post('behaviorType');
+            $trigger = $this->input->post('trigger');
+            $normId = $this->input->post('normId');
+            $jobType = $this->input->post('jobType');
+            $jobName = $this->input->post('jobName');
             $desc = $this->input->post('desc');
 
-            $resUpd = $this->behaviorLogic->editBehavior($id,$name,$type,$job,$desc);
+
+            $resUpd = $this->behaviorLogic->editBehavior($id,$name,$behaviorType,$trigger,$normId,$jobType,$jobName,$desc);
             header('Content-type:application/json');
             echo json_encode($resUpd);
         }
@@ -80,7 +99,12 @@ class Behavior extends CI_Controller{
             $behaviorId = $this->input->get('id');
 
             $this->config->load('behavior');
-            $typeArr = $this->config->item('type');
+            $behaviorTypeArr = $this->config->item('behaviorType');
+            $trigger = $this->config->item('trigger');
+            $jobType = $this->config->item('jobType');
+
+            $resAllNorm = $this->normLogic->getAllNorm();
+            $allNorm = $resAllNorm['errNo']==0 ? $resAllNorm['result'] : array();
 
             $resInfo = $this->behaviorLogic->getInfo($behaviorId);
             if($resInfo['errNo']!=0)
@@ -89,7 +113,10 @@ class Behavior extends CI_Controller{
             {
                 $info = $resInfo['result'];
 
-                $this->assign('typeArr',$typeArr);
+                $this->assign('jobType',$jobType);
+                $this->assign('allNorm',$allNorm);
+                $this->assign('trigger',$trigger);
+                $this->assign('behaviorTypeArr',$behaviorTypeArr);
                 $this->assign('info',$info);
 
                 $this->display('editbehavior');
@@ -127,6 +154,24 @@ class Behavior extends CI_Controller{
             $this->fail($resDel['errMsg'],'/behavior');
         else
             $this->success($resDel['errMsg'],'/behavior');
+    }
+
+    public function enableBehavior()
+    {
+        $id = $this->input->post("id");
+        $this->load->logic('behaviorLogic');
+        $resEnable = $this->behaviorLogic->enableBehavior($id);
+        header("Content-type:application/json;");
+        echo json_encode($resEnable);
+    }
+
+    public function disabledBehavior()
+    {
+        $id = $this->input->post("id");
+        $this->load->logic('behaviorLogic');
+        $resDisabled = $this->behaviorLogic->disabledBehavior($id);
+        header("Content-type:application/json;");
+        echo json_encode($resDisabled);
     }
 
 }
