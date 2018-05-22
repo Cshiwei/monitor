@@ -171,7 +171,7 @@ $(function(){
                 {
                     type:'inside',
                     show: true,
-                    start : 90
+                    start : <{$zoomStart}>,
                 },
                 {
                     type:'slider',
@@ -195,6 +195,7 @@ $(function(){
                         formatter:formatTime
                     },
                     splitNumber : 15,
+                    //minInterval : 5 * 60 * 1000,
                 }
             ],
             yAxis : [
