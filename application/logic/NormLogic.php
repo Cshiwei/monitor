@@ -488,4 +488,25 @@ class NormLogic extends CI_Logic{
 
         return isset($unitArr[$unit]) ? $unitArr[$unit]['name'] : '';
     }
+
+    public function getBehavior($normId)
+    {
+
+    }
+
+    public function getAllNorm()
+    {
+        $this->load->model('normModel');
+        $resNorm = $this->normModel->getAllNorm();
+
+        if(!$resNorm)
+            return $this->returnMsg(101,'未获取到指标信息');
+
+        foreach($resNorm as $key=>$val)
+        {
+            $resNorm[$key]['thresholdShow'] = $this->getThresholdShow($val['relation'],$val['threshold'],$val['unit']);
+        }
+
+        return $this->returnMsg(0,$resNorm);
+    }
 }

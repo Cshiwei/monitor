@@ -204,4 +204,16 @@ class EffectModel extends CI_Model{
         $this->db->where(array('normId'=>$normId));
         return $this->db->delete('effect_norm_bind');
     }
+
+    public function getAllEffect()
+    {
+        $sql ="SELECT * FROM `{$this->db->dbprefix('effect')}` ORDER BY `name` ASC";
+        return $this->db->query($sql)->result_array();
+    }
+
+    public function getEffectByName($name)
+    {
+        $sql ="SELECT * FROm `{$this->db->dbprefix('effect')}` WHERE `name`='{$name}'";
+        return $this->db->query($sql)->row_array();
+    }
 }

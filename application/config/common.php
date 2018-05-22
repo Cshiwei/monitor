@@ -47,3 +47,4 @@ $config['slidebarActive'] = array(
         'active' => 'behavior'
     ),
 );
+

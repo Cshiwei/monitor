@@ -11,6 +11,7 @@ class Api extends CI_Controller{
     public function addNormCensus()
     {
         $this->load->logic('normLogic');
+        $this->load->logic('registerLogic');
 
         $normId = $this->input->post('normId');
         $normValue = $this->input->post('normValue');
@@ -19,6 +20,14 @@ class Api extends CI_Controller{
         $resAdd = $this->normLogic->addNormCensus($normId,$normValue,$normTime);
         header('Content-type:application/json');
         echo json_encode($resAdd);
+        $this->registerLogic->run($normId,$normValue,$normTime,$resAdd);
+    }
+
+    public function runTask()
+    {
+        echo 666;
+        sleep(7);
+        die;
     }
 
 
@@ -43,4 +52,7 @@ class Api extends CI_Controller{
         curl_exec($curl);
         curl_close($curl);
     }
+
+
+
 }

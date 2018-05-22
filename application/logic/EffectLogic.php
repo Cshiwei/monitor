@@ -411,4 +411,15 @@ class EffectLogic extends CI_Logic{
         return $this->returnMsg(0,$res);
     }
 
+    public function getALLEffect()
+    {
+        $this->load->model('effectModel');
+        $res = $this->effectModel->getAllEffect();
+        if(!$res)
+            return $this->returnMsg(101,'未获取到影响信息');
+
+        return $this->returnMsg(0,$res);
+    }
+
+
 }

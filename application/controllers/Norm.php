@@ -197,4 +197,17 @@ class Norm extends CI_Controller{
         }
 
     }
+
+    /**csw
+     * 指标关联行为
+     */
+    public function joinBehavior()
+    {
+        $this->load->logic('normLogic');
+
+        $normId = $this->input->get('normId');
+        $resBehavior = $this->normLogic->getBehavior($normId);
+
+        $this->display('normbehavior');
+    }
 }
