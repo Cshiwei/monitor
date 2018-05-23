@@ -130,7 +130,8 @@ $(function(){
     })
 })
 
-//控制图表展示
+    <{if $haveData}>
+    //控制图表展示
     $(function(){
         var formatTime = function (value, index) {
             var date = new Date(value);
@@ -209,5 +210,7 @@ $(function(){
 // 使用刚指定的配置项和数据显示图表。
         myChart.setOption(option);
     })
+    <{/if}>
+
 </script>
 </html>
