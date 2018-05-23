@@ -18,7 +18,20 @@ $config['jobType'] = array(
     )*/
 );
 
-$config['behaviorType'] = array(
+$config['taskType'] = array(
+    '1' => array(
+        'name' => '发邮件',
+        'val' => 1,
+        'paramFm' => 'emailFm',
+    ),
+    /*'2' => array(
+        'name' => '调用接口',
+        'val' => 2,
+    ),*/
+);
+
+
+/*$config['behaviorType'] = array(
     '1' => array(
         'name' => '系统',
         'val' => 1,
@@ -31,7 +44,7 @@ $config['behaviorType'] = array(
         'desc' => '仅对指定item生效',
         'default' => 1,
     ),
-);
+);*/
 
 $config['status'] = array(
     0  => array(

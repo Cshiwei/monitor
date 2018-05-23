@@ -7,11 +7,10 @@
  */
 class BehaviorLogic extends CI_Logic{
 
-    static $BEHAVIOR_TYPE_SYS = 1;
-    static $BEHAVIOR_TYPE_CUSTOMIZE = 2;
+   static $TASK_TYPE_EMAIL=1;
 
 
-    public function addBehavior($name,$behaviorType,$trigger,$normId,$jobType,$jobName,$desc)
+    public function addBehavior($name,$desc,$normId,$taskType,$taskParam)
     {
         $this->load->model('behaviorModel');
         $this->load->model('normModel');
@@ -22,50 +21,67 @@ class BehaviorLogic extends CI_Logic{
         if(!$this->behaviorModel->addNameUnique($name))
             return $this->returnMsg(102,'该名称已被占用');
 
-        if(!$this->confirmBehaviorType($behaviorType))
-            return $this->returnMsg(103,'无效的行为类型');
-
-        if(!$this->confirmTrigger($trigger))
-            return $this->returnMsg(104,'无效的触发条件');
-
-        if($behaviorType == self::$BEHAVIOR_TYPE_CUSTOMIZE)
-        {
-            $resNorm = $this->normModel->getNormInfo($normId);
-            if(!$resNorm)
-                return $this->returnMsg(105,'无效的指标');
-        }
-
-        if(!$this->confirmJobType($jobType))
-            return $this->returnMsg(106,'无效的任务类型');
-
-        if(empty($jobName))
-            return $this->returnMsg(107,'无效的任务');
-
         if(empty($desc))
             return $this->returnMsg(108,'无效的描述');
 
-        $now = time();
-        $data = array(
-            'name' => $name,
-            'behaviorType' => $behaviorType,
-            'trigger' => $trigger,
-            'jobType' => $jobType,
-            'jobName' => $jobName,
-            'desc' => $desc,
-            'createTime' => $now,
-            'updTime' => $now,
-        );
+        $resNorm = $this->normModel->getNormInfo($normId);
+        if(!$resNorm)
+            return $this->returnMsg(105,'无效的指标');
 
-        if($behaviorType == self::$BEHAVIOR_TYPE_CUSTOMIZE)
-            $data['normId'] = $normId;
+         $resConfirmTask = $this->confirmTask($taskType,$taskParam);
+         if($resConfirmTask['errNo']!=0)
+                return $resConfirmTask;
 
-        $resAdd = $this->behaviorModel->addBehavior($data);
+        $resAdd = $this->behaviorModel->addBehavior($name,$desc,$normId,$taskType,$taskParam);
 
         if(!$resAdd)
             return $this->returnMsg(106,'添加失败');
 
         return $this->returnMsg(0);
     }
+
+    public function confirmTask($taskType,$taskParam)
+    {
+        $this->load->helper('email');
+        switch($taskType)
+        {
+            case self::$TASK_TYPE_EMAIL :
+                $emailTitle = isset($taskParam['emailTitle']) ? $taskParam['emailTitle'] : '';
+                $emailTo = isset($taskParam['emailTo']) ? $taskParam['emailTo'] : '';
+                $emailContent = isset($taskParam['emailContent']) ? $taskParam['emailContent'] : '';
+
+                if(empty($emailTitle))
+                    return $this->returnMsg(302,'无效的邮件标题');
+
+                if(empty($emailTo))
+                    return $this->returnMsg(303,'无效的收件人');
+
+                $emailToArr = explode(',',$emailTo);
+                if(!$this->batchCheckMail($emailToArr))
+                    return $this->returnMsg(304,'收件人格式有误');
+
+                if(empty($emailContent))
+                    return $this->returnMsg(305,'无效的邮件内容');
+
+                break;
+            default :
+                return $this->returnMsg(301,'无效的任务类型');
+        }
+    }
+
+    public function batchCheckMail($emailArr)
+    {
+        if(empty($emailArr))
+            return false;
+
+        foreach ($emailArr as $key=>$val)
+        {
+            if(!filter_var($val, FILTER_VALIDATE_EMAIL))
+                return false;
+        }
+        return true;
+    }
+
 
     public function confirmTrigger($trigger)
     {
@@ -119,7 +135,6 @@ class BehaviorLogic extends CI_Logic{
 
         foreach ($resList as $key=>$val)
         {
-            $resList[$key]['jobNameShow'] = $this->jobShow($val['jobType'],$val['jobName']);
             $resList[$key]['statusShow'] = $this->statusShow($val['status']);
         }
 
@@ -149,6 +164,7 @@ class BehaviorLogic extends CI_Logic{
     public function getInfo($behaviorId)
     {
         $this->load->model('behaviorModel');
+        $this->load->logic('normLogic');
         $this->load->model('normModel');
         if(empty($behaviorId))
             return $this->returnMsg(101,'无效的行为ID');
@@ -158,15 +174,15 @@ class BehaviorLogic extends CI_Logic{
         if(!$resInfo)
             return $this->returnMsg(102,'未获取到行为信息');
 
-        if($resInfo['normId'])
-        {
-            $resNormInfo = $this->normModel->getNormInfo($resInfo['normId']);
-            $resInfo['norm'] = $resNormInfo ? $resNormInfo['name'] : '';
-        }
+        $resTaskInfo = $this->behaviorModel->getTaskInfo($behaviorId,$resInfo['taskType']);
+        $resNormInfo = $this->normModel->getNormInfo($resInfo['normId']);
 
-        $resInfo['behaviorTypeShow'] = $this->behaviorTypeShow($resInfo['behaviorType']);
+        $normName = $resNormInfo ? $resNormInfo['name'] : '';
+        $resInfo['norm'] = $normName;
+        $thresholdShow = $this->normLogic->getThresholdShow($resNormInfo['relation'],$resNormInfo['threshold'],$resNormInfo['unit']);
+        $resInfo['thresholdShow'] = $thresholdShow;
+        $resInfo['taskInfo'] = $resTaskInfo;
         $resInfo['statusShow'] = $this->statusShow($resInfo['status']);
-        $resInfo['triggerShow'] = $this->triggerShow($resInfo['trigger']);
 
         return $this->returnMsg(0,$resInfo);
     }
@@ -187,7 +203,7 @@ class BehaviorLogic extends CI_Logic{
         return isset($triggerArr[$trigger]['name']) ? $triggerArr[$trigger]['name'] : '';
     }
 
-    public function editBehavior($id,$name,$behaviorType,$trigger,$normId,$jobType,$jobName,$desc)
+    public function editBehavior($id,$name,$desc,$normId,$taskType,$taskParam)
     {
         $this->load->model('behaviorModel');
         $this->load->model('normModel');
@@ -195,47 +211,28 @@ class BehaviorLogic extends CI_Logic{
         if(empty($id))
             return $this->returnMsg(101,'无效的行为ID');
 
+        $resBehaviorInfo = $this->behaviorModel->getInfo($id);
+        if(!$resBehaviorInfo)
+            return $this->returnMsg(102,'未获取到行为信息');
+
         if(empty($name))
-            return $this->returnMsg(102,'无效的行为名称');
+            return $this->returnMsg(103,'无效的行为名称');
 
         if(!$this->behaviorModel->editNameUnique($id,$name))
-            return $this->returnMsg(103,'该名称已被占用');
-
-        if(!$this->confirmBehaviorType($behaviorType))
-            return $this->returnMsg(104,'非法的行为类型');
-
-        if(!$this->confirmTrigger($trigger))
-            return $this->returnMsg(105,'无效的触发器');
-
-        if($behaviorType == self::$BEHAVIOR_TYPE_CUSTOMIZE)
-        {
-            $resNorm = $this->normModel->getNormInfo($normId);
-            if(!$resNorm)
-                return $this->returnMsg(106,'无效的指标ID');
-        }
-
-        if(!$this->confirmJobType($jobType))
-            return $this->returnMsg(107,'无效的任务类型');
-
-        if(empty($jobName))
-            return $this->returnMsg(108,'无效的任务名称');
+            return $this->returnMsg(104,'该名称已被占用');
 
         if(empty($desc))
-            return $this->returnMsg(109,'无效的描述信息');
+            return $this->returnMsg(105,'无效的描述');
 
-        $data = array(
-            'name' => $name,
-            'behaviorType' => $behaviorType,
-            'trigger' => $trigger,
-            'normId' => $normId,
-            'jobType' => $jobType,
-            'jobName' => $jobName,
-            'desc' => $desc,
-            'status' => 0,
-            'updTime' => time(),
-        );
+        $resNorm = $this->normModel->getNormInfo($normId);
+        if(!$resNorm)
+            return $this->returnMsg(106,'无效的指标');
 
-        $resUpd = $this->behaviorModel->updBehavior($id,$data);
+        $resConfirmTask = $this->confirmTask($taskType,$taskParam);
+        if($resConfirmTask['errNo']!=0)
+            return $resConfirmTask;
+
+        $resUpd = $this->behaviorModel->updBehavior($id,$name,$desc,$normId,$taskType,$taskParam);
 
         if(!$resUpd)
             return $this->returnMsg(107,'更新失败');
@@ -245,12 +242,18 @@ class BehaviorLogic extends CI_Logic{
 
     public function del($id)
     {
+        $this->load->model('behaviorModel');
         if(empty($id))
             return $this->returnMsg(101,'无效的行为ID');
 
+        $resBehavior = $this->behaviorModel->getInfo($id);
+        if(!$resBehavior)
+            return $this->returnMsg(102,'未获取到行为ID');
+
         $this->load->model('behaviorModel');
 
-        $resDel = $this->behaviorModel->delBehaviorTrans($id);
+        $resDel = $this->behaviorModel->delBehaviorTrans($id,$resBehavior['taskType']);
+
         if(!$resDel)
             return $this->returnMsg(102,'删除失败');
 

@@ -9,6 +9,8 @@ class JobLogic extends CI_Logic{
 
     private $param;
 
+    static $TASK_TYPE_EMAIL=1;
+
     public function setParam($param)
     {
         $this->param = $param;
@@ -34,19 +36,27 @@ class JobLogic extends CI_Logic{
         return $this->returnMsg(0,$resSend);
     }
 
-    public function reloadHost()
+    public function email()
     {
+        $this->load->model('behaviorModel');
+        $behaviorId = $this->param['behaviorId'];
+        $resTaskInfo = $this->behaviorModel->getTaskInfo($behaviorId,self::$TASK_TYPE_EMAIL);
 
-    }
+        $emailTitle = $resTaskInfo['title'];
+        $emailTo = $resTaskInfo['emailTo'];
+        $emailContent = $resTaskInfo['content'];
 
-    public function failInsert()
-    {
+        $emailToArr = explode(',',$emailTo);
+        $this->load->library('email');
+        $this->email->from('caoshiwei@lightinthebox.com', 'caoshiwei');
+        $this->email->to($emailToArr);
+        $this->email->subject($emailTitle);
+        $this->email->message($emailContent);
+        $this->email->set_newline("\r\n");
 
-    }
-
-    public function reload()
-    {
-
+        $this->email->send();
+        $resSend = $this->email->print_debugger();
+        return $this->returnMsg(0,$resSend);
     }
 
     public function _taskBegin()

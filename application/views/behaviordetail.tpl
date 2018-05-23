@@ -33,6 +33,7 @@
                                         <a data-id="<{$info.id}>" id="disabledBehavior">禁用</a>
                                     <{/if}>
                                 </li>
+                                <li><a href="/behavior/edit?id=<{$info.id}>">编辑</a></li>
                                 <li><a data-name="<{$info.name}>" data-id="<{$info.id}>" id="delBehavior" data-toggle="modal" data-target="#delBehaviorModal">删除</a></li>
                             </ul>
                         </div>
@@ -43,11 +44,7 @@
             <div class="row">
                 <div class="col-xs-12">
                     <p>状态：<{$info.statusShow}></p>
-                    <p>行为类型:<{$info.behaviorTypeShow}></p>
-                    <{if $info.behaviorType eq 2}>
-                        <p>触发指标:<{$info.norm}></p>
-                    <{/if}>
-                    <p>条件：<{$info.triggerShow}></p>
+                    <p>触发指标:<{$info.thresholdShow}></p>
                     <p>描述：<{$info.desc}></p>
                 </div>
             </div>
@@ -57,9 +54,14 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-xs-12">
-
-                </div>
+                <{if $info.taskType eq 1}>
+                    <div class="col-xs-12">
+                        <p>任务类型: 邮件</p>
+                        <p>邮件标题：<{$info.taskInfo.title}></p>
+                        <p>收件人：<{$info.taskInfo.emailTo}></p>
+                        <p>邮件内容:<{$info.taskInfo.content}></p>
+                    </div>
+                <{/if}>
             </div>
         </div>
     </div>

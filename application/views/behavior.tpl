@@ -24,7 +24,6 @@
                 <th>
                 <td>ID</td>
                 <td>名称</td>
-                <td>任务</td>
                 <td>描述</td>
                 <td>状态</td>
                 <td>操作</td>
@@ -35,7 +34,6 @@
                         <td></td>
                         <td><{$val.id}></td>
                         <td><{$val.name}></td>
-                        <td><{$val.jobNameShow}></td>
                         <td class="td-hidden"><{$val.desc}></td>
                         <td><{$val.statusShow}></td>
                         <td>

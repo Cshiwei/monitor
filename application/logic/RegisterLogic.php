@@ -17,11 +17,7 @@ class RegisterLogic extends CI_Logic{
 
     public $out=array();
 
-    static $BEHAVIOR_TYPE_SYS = 1;
-    static $BEHAVIOR_TYPE_CUSTOMIZE = 2;
-
-    static $JOB_TYPE_METHOD = 1;
-    static $JOB_TYPE_SCRIPT = 2;
+    static $TASK_TYPE_EMAIL = 1;
 
     //接口相关trigger
     static $TRIGGER_DATA_RECEIVE_REQUEST =1;
@@ -68,31 +64,26 @@ class RegisterLogic extends CI_Logic{
         else
             $this->register(self::$TRIGGER_NORM_NORMAL);
 
-        $resSysBehavior = $this->behaviorModel->getSysBehavior();
         $resNormBehavior = $this->behaviorModel->getBehaviorByNormId($normId);
-
-        $behavior = array_merge($resSysBehavior,$resNormBehavior);
-
-        if($behavior)
+        foreach($resNormBehavior as $key=>$val)
         {
-            foreach($behavior as $key=>$val)
+            $resTask = $this->behaviorModel->getTaskInfo($val['id'],$val['taskType']);
+            if($resTask)
             {
                 if(array_search($val['trigger'],$this->triggerArr))
                 {
                     $this->param['behaviorId'] = $val['id'];
-                    switch($val['jobType'])
+                    $this->param['taskId'] = $resTask['id'];
+                    switch($val['taskType'])
                     {
-                        case self::$JOB_TYPE_METHOD :
-                            $this->runJob($val['jobName']);
-                            break;
-                        case self::$JOB_TYPE_SCRIPT :
+                        case self::$TASK_TYPE_EMAIL :
+                            $this->runJob('email');
                             break;
                         default:
                     }
                 }
             }
         }
-
     }
 
     public function runJob($jobName)
