@@ -458,7 +458,12 @@ class NormLogic extends CI_Logic{
                 );
             }
         }
-        $zoomStart = max($zoomStartArr);
+        if(empty($dayArr))
+            $haveData = 0;
+        else
+            $haveData = 1;
+
+        $zoomStart = !empty($zoomStartArr) ? max($zoomStartArr) : 0;
         $dayArr[0]['markLine'] = array(
                                         'data' => array(
                                             array(
@@ -473,14 +478,12 @@ class NormLogic extends CI_Logic{
                                             'formatter' => "{b}: {$resNorm['threshold']}",
                                         )
                                          );
-        if(empty($dayArr))
-            $this->returnMsg('105','未获取到指标统计信息');
-
         $res = array(
             'info' => $resNorm,
             'legend' => $legend,
             'lineArr' => $dayArr,
             'zoomStart' => $zoomStart,
+            'haveData' => $haveData,
         );
         return $this->returnMsg(0,$res);
     }
