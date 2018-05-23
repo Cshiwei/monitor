@@ -25,7 +25,7 @@ class Test extends CI_Controller{
         $this->load->logic('normLogic');
         $this->load->logic('registerLogic');
 
-        $normId = 2;
+        $normId = 3;
         $normValue = 2000;
         $normTime = 1526629830;
 

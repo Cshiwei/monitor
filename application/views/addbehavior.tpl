@@ -20,16 +20,6 @@
                 <div class="col-xs-12">
                     <div class="page-header">
                         <div class="dropdown pull-right">
-                            <!--
-                            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Action
-                                <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                                <li><a href="/behavior/runBehavior?id=">运行</a></li>
-                                <li><a href="/behavior">列表</a></li>
-                            </ul>
-                            -->
                         </div>
                         <h4>添加行为<small> </small></h4>
                     </div>
@@ -54,18 +44,6 @@
                         <textarea name="desc" class="form-control" id="desc" rows="3"></textarea>
                     </div>
                 </div>
-                <!--
-                <div class="form-group">
-                    <label for="" class="col-xs-2 control-label">行为类型</label>
-                    <div class="col-xs-5">
-                    <{foreach $behaviorType as $key=>$val}>
-                        <label class="radio-inline">
-                            <input <{if $val.default}>checked<{/if}> type="radio" name="behaviorType" value="<{$val.val}>"> <{$val.name}>
-                        </label>
-                    <{/foreach}>
-                    </div>
-                </div>
-                -->
                 <div class="form-group" id="itemGroup">
                     <label for="normId" class="col-xs-2 control-label">触发条件</label>
                     <div class="col-xs-5">
@@ -76,26 +54,13 @@
                         </select>
                     </div>
                 </div>
-                <!--
-                <div class="form-group" >
-                    <label for="trigger" class="col-xs-2 control-label">触发条件</label>
-                    <div class="col-xs-5">
-                        <select id="trigger" name="trigger" id="" class="form-control">
-                            <{foreach $trigger as $key=>$val}>
-                                <option value="<{$val.val}>" title="<{$val.desc}>" ><{$val.name}></option>
-                            <{/foreach}>
-                        </select>
-                    </div>
-                </div>
-                -->
                 <div class="form-group">
-                    <label for="jobType" class="col-xs-2 control-label">任务类型</label>
+                    <label for="taskType" class="col-xs-2 control-label">任务类型</label>
                     <div class="col-xs-2">
-                        <select id="jobType" name="jobType" class="form-control">
-                                <option class="form-control" data-param="emailFm" value="1">发邮件</option>
-                                <option class="form-control" data-param="commondFm" value="2">执行命令</option>
-                                <option class="form-control" data-param="methodFm" value="3">执行方法</option>
-                                <option class="form-control" data-param="apiFm" value="4">调用接口</option>
+                        <select id="taskType" name="taskType" class="form-control">
+                            <{foreach $taskType as $key=>$val}>
+                                <option class="form-control" value="<{$val.val}>" data-param="<{$val.paramFm}>"><{$val.name}></option>
+                            <{/foreach}>
                         </select>
                     </div>
                 </div>
@@ -111,80 +76,24 @@
                     <div id="emailFm">
                         <!-- 邮件参数-->
                         <div class="form-group emailFm">
-                            <label for="jobType" class="col-xs-2 control-label">邮件标题</label>
+                            <label for="emailTitle" class="col-xs-2 control-label">邮件标题</label>
                             <div class="col-xs-4">
-                                <input class="form-control" type="text" name="eamilTitle"/>
+                                <input id="emailTitle" class="form-control" type="text" name="emailTitle"/>
                             </div>
                         </div>
                         <div class="form-group emailFm">
-                            <label for="jobType" class="col-xs-2 control-label">收件人</label>
+                            <label for="emailTo" class="col-xs-2 control-label">收件人</label>
                             <div class="col-xs-6">
-                                <textarea name="desc" class="form-control" id="desc" rows="3"></textarea>
+                                <textarea name="emailTo" class="form-control" id="emailTo" rows="3"></textarea>
                             </div>
                         </div>
                         <div class="form-group emailFm">
-                            <label for="jobType" class="col-xs-2 control-label">邮件内容</label>
+                            <label for="emailContent" class="col-xs-2 control-label">邮件内容</label>
                             <div class="col-xs-7">
-                                <textarea name="desc" class="form-control" id="desc" rows="3"></textarea>
+                                <textarea name="emailContent" class="form-control" id="emailContent" rows="3"></textarea>
                             </div>
                         </div>
                         <!-- 邮件参数 -->
-                    </div>
-
-                    <div id="apiFm">
-                        <!--调用接口-->
-                        <div class="form-group apiFm">
-                            <label for="jobType" class="col-xs-2 control-label">接口地址</label>
-                            <div class="col-xs-4">
-                                <input class="form-control" type="text" name="eamilTitle"/>
-                            </div>
-                        </div>
-                        <div class="form-group apiFm">
-                            <label for="jobType" class="col-xs-2 control-label">方法</label>
-                            <div class="col-xs-4">
-                                <select class="form-control">
-                                    <option>GET</option>
-                                    <option>POST</option>
-                                    <option>DELETE</option>
-                                    <option>PUT</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group apiFm">
-                            <label class="col-xs-2 control-label" for="">参数</label>
-                            <div class="col-xs-5">
-                                <textarea name="desc" class="form-control" id="desc" rows="3"></textarea>
-                            </div>
-                        </div>
-                        <!--调用接口-->
-                    </div>
-
-                    <div id="methodFm">
-                        <!--调用方法-->
-                        <div class="form-group methodFm">
-                            <label for="jobType" class="col-xs-2 control-label">方法名称</label>
-                            <div class="col-xs-4">
-                                <input class="form-control" type="text" name="eamilTitle"/>
-                            </div>
-                        </div>
-                        <div class="form-group methodFm">
-                            <label class="col-xs-2 control-label" for="">参数</label>
-                            <div class="col-xs-5">
-                                <textarea name="desc" class="form-control" id="desc" rows="3"></textarea>
-                            </div>
-                        </div>
-                        <!--调用方法-->
-                    </div>
-
-                    <div id="commondFm">
-                        <!--命令行-->
-                        <div class="form-group commondFm">
-                            <label for="jobType" class="col-xs-2 control-label">命令行</label>
-                            <div class="col-xs-7">
-                                <input class="form-control" type="text" name="eamilTitle"/>
-                            </div>
-                        </div>
-                        <!--命令行-->
                     </div>
                 </div>
 
@@ -223,22 +132,16 @@
             var alertObj = $("#alertDom");
 
             var name = $("#name").val();
-            var behaviorType = $("input[name='behaviorType']:checked").val();
-            var trigger = $("#trigger").val();
-            var normId = $("#normId").val();
-            var jobType = $("#jobType").val();
-            var jobName = $("#jobName").val();
             var desc = $("#desc").val();
+            var normId = $("#normId").val();
+            var taskType = $("#taskType").val();
+            var emailTitle = $("#emailTitle").val();
+            var emailTo = $("#emailTo").val();
+            var emailContent = $("#emailContent").val();
 
-            if(name===''){
+           if(name===''){
                 addAlert(alertObj,'名称不可以为空');
                 $("#name").focus();
-                return false;
-            }
-
-            if(jobName===''){
-                addAlert(alertObj,'任务不可以为空');
-                $("#jobName").focus();
                 return false;
             }
 
@@ -248,15 +151,39 @@
                 return false;
             }
 
+            if(taskType==1){
+                if(emailTitle===''){
+                    addAlert(alertObj,'邮件标题不可以为空');
+                    $("#emailTitle").focus();
+                    return false;
+                }
+
+                if(emailTo===''){
+                    addAlert(alertObj,'收件人不可以为空');
+                    $("#emailTo").focus();
+                    return false;
+                }
+
+                if(emailContent ===''){
+                    addAlert(alertObj,'邮件内容不可以为空');
+                    $("#emailContent").focus();
+                    return false;
+                }
+
+                taskParam={
+                    emailTitle:emailTitle,
+                    emailTo:emailTo,
+                    emailContent:emailContent,
+                };
+            }
+
             var url ="/behavior/add"
             $.post(url,{
                 name:name,
-                behaviorType:behaviorType,
-                trigger:trigger,
-                normId:normId,
-                jobType:jobType,
-                jobName:jobName,
                 desc:desc,
+                normId:normId,
+                taskType:taskType,
+                taskParam:taskParam,
             },function(res){
                 if(res.errNo===0){
                     addAlert(alertObj,'添加成功，即将跳转','success');
@@ -270,13 +197,13 @@
 
     //变更行为类型，更改表单
     $(function(){
-       $("#jobType").change(function(){
-           var param = $("#jobType option:selected").data('param');
+       $("#taskType").change(function(){
+           var param = $("#taskType option:selected").data('param');
            var html = $("#"+param).html();
            $("#paramFm").html(html);
        })
 
-        $("#jobType").change();
+        $("#taskType").change();
     })
 
 

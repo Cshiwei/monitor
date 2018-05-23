@@ -20,7 +20,7 @@ class Api extends CI_Controller{
         $resAdd = $this->normLogic->addNormCensus($normId,$normValue,$normTime);
         header('Content-type:application/json');
         echo json_encode($resAdd);
-        //$this->registerLogic->run($normId,$normValue,$normTime,$resAdd);
+        $this->registerLogic->run($normId,$normValue,$normTime,$resAdd);
     }
 
     public function runTask()

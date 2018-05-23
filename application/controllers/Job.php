@@ -16,12 +16,6 @@ class Job extends CI_Controller{
         $param = json_decode($this->input->post('param'),true);
         $this->jobLogic->setParam($param,true);
 
-       /* $data = array(
-            'name' => $jobName,
-        );
-        $this->db->insert('norm',$data);
-        die;*/
-
         if(method_exists($this->jobLogic,$jobName))
         {
             $resLogId = $this->jobLogic->_taskBegin();
