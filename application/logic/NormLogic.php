@@ -429,6 +429,10 @@ class NormLogic extends CI_Logic{
         $dayArr = array();
         $legend = array();
         $zoomStartArr = array();
+        $xLine = array(
+            'time' => 0,
+            'num' => 0,
+        );
         for($i=$beginTime;$i<$endTime;$i+=24 * 3600)
         {
             //$dayArr[] = date('Y-m-d',$i);
@@ -445,10 +449,14 @@ class NormLogic extends CI_Logic{
                 $censusData = array();
                 foreach ($resCensus as $key=>$val)
                 {
-                    $censusData[$key][] = strtotime(date('H:i:s',$val['normTime'])) * 1000;
+                    $stamp = strtotime(date('H:i:s',$val['normTime']));
+                    $censusData[$key][] = $stamp * 1000;
                     $censusData[$key][] = $val['value'];
+                    if($stamp > $xLine['time'])
+                        $xLine['num']++;
                 }
-                $zoomStartArr[] = 20/count($censusData) > 1 ? 0 : (1 - round(20/count($censusData),2)) * 100;
+                $zoomDataNum[] = count($censusData);
+                //$zoomStartArr[] = 20/count($censusData) > 1 ? 0 : (1 - round(20/count($censusData),2)) * 100;
                 $dayArr[] = array(
                     'name' => date('Y-m-d',$i),
                     'type' => 'line',
@@ -463,7 +471,12 @@ class NormLogic extends CI_Logic{
         else
             $haveData = 1;
 
-        $zoomStart = !empty($zoomStartArr) ? max($zoomStartArr) : 0;
+        $todayNum = end($zoomDataNum);
+        $zoomEnd = round($todayNum/$xLine['num'],2);
+        $zoomOffset = 20 > $xLine['num'] ? $zoomEnd : round(20/$xLine['num'],2);
+        $zoomStart = ($zoomEnd - $zoomOffset) * 100;
+        $zoomEnd *=100;
+
         $dayArr[0]['markLine'] = array(
                                         'data' => array(
                                             array(
@@ -483,6 +496,7 @@ class NormLogic extends CI_Logic{
             'legend' => $legend,
             'lineArr' => $dayArr,
             'zoomStart' => $zoomStart,
+            'zoomEnd' => $zoomEnd,
             'haveData' => $haveData,
         );
         return $this->returnMsg(0,$res);

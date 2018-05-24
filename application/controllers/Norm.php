@@ -190,6 +190,7 @@ class Norm extends CI_Controller{
 
             $this->assign('haveData',$resLine['result']['haveData']);
             $this->assign('zoomStart',$resLine['result']['zoomStart']);
+            $this->assign('zoomEnd',$resLine['result']['zoomEnd']);
             $this->assign('info',$info);
             $this->assign('legend',$legend);
             $this->assign('lineStr',$lineStr);
