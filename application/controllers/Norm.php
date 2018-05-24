@@ -189,8 +189,8 @@ class Norm extends CI_Controller{
             $legend = json_encode($resLine['result']['legend']);
 
             $this->assign('haveData',$resLine['result']['haveData']);
-            $this->assign('zoomStart',$resLine['result']['zoomStart']);
-            $this->assign('zoomEnd',$resLine['result']['zoomEnd']);
+            $this->assign('zoomStartValue',$resLine['result']['zoomStartValue']);
+            $this->assign('zoomEndValue',$resLine['result']['zoomEndValue']);
             $this->assign('info',$info);
             $this->assign('legend',$legend);
             $this->assign('lineStr',$lineStr);
@@ -198,7 +198,6 @@ class Norm extends CI_Controller{
             $this->assign('endDay',$endDay);
             $this->display('normLine');
         }
-
     }
 
     /**csw

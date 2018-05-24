@@ -426,13 +426,17 @@ class NormLogic extends CI_Logic{
         if($endTime - $beginTime > $maxDay * 24 * 3600)
             return $this->returnMsg(104,"最大时间区间不可以超过{$maxDay}天");
 
+        $resCensusRecent = $this->normModel->getNormRecentCensus($normId,$endTime,0,20);
+
+        if($resCensusRecent)
+        {
+            $zoomEndValue = strtotime(date("H:i:s",$resCensusRecent[0]['normTime'])) * 1000;
+            $zoomStartValue = strtotime(date("H:i:s",$resCensusRecent[count($resCensusRecent)-1]['normTime'])) * 1000;
+        }
+
         $dayArr = array();
         $legend = array();
-        $zoomStartArr = array();
-        $xLine = array(
-            'time' => 0,
-            'num' => 0,
-        );
+
         for($i=$beginTime;$i<$endTime;$i+=24 * 3600)
         {
             //$dayArr[] = date('Y-m-d',$i);
@@ -452,11 +456,8 @@ class NormLogic extends CI_Logic{
                     $stamp = strtotime(date('H:i:s',$val['normTime']));
                     $censusData[$key][] = $stamp * 1000;
                     $censusData[$key][] = $val['value'];
-                    if($stamp > $xLine['time'])
-                        $xLine['num']++;
                 }
-                $zoomDataNum[] = count($censusData);
-                //$zoomStartArr[] = 20/count($censusData) > 1 ? 0 : (1 - round(20/count($censusData),2)) * 100;
+
                 $dayArr[] = array(
                     'name' => date('Y-m-d',$i),
                     'type' => 'line',
@@ -470,12 +471,6 @@ class NormLogic extends CI_Logic{
             $haveData = 0;
         else
             $haveData = 1;
-
-        $todayNum = end($zoomDataNum);
-        $zoomEnd = round($todayNum/$xLine['num'],2);
-        $zoomOffset = 20 > $xLine['num'] ? $zoomEnd : round(20/$xLine['num'],2);
-        $zoomStart = ($zoomEnd - $zoomOffset) * 100;
-        $zoomEnd *=100;
 
         $dayArr[0]['markLine'] = array(
                                         'data' => array(
@@ -495,8 +490,8 @@ class NormLogic extends CI_Logic{
             'info' => $resNorm,
             'legend' => $legend,
             'lineArr' => $dayArr,
-            'zoomStart' => $zoomStart,
-            'zoomEnd' => $zoomEnd,
+            'zoomEndValue' => $zoomEndValue,
+            'zoomStartValue' => $zoomStartValue,
             'haveData' => $haveData,
         );
         return $this->returnMsg(0,$res);
