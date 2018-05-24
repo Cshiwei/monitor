@@ -50,24 +50,26 @@
                         </div>
                     </form>
                     </p>
-                    <table class="table table-condensed ">
-                        <tbody><tr>
-                            <td></td>
-                            <td>序号</td>
-                            <td>值</td>
-                            <td>时间</td>
-                        </tr>
-                        </tbody><tbody>
-                        <{foreach $list as $key=>$val}>
-                            <tr class="<{$val.scene}>">
+                    <div class="pre-scrollable">
+                        <table class="table table-condensed">
+                            <tbody><tr>
                                 <td></td>
-                                <td><{$val@iteration}></td>
-                                <td><{$val.valueShow}></td>
-                                <td><{$val.normTimeShow}></td>
+                                <td>序号</td>
+                                <td>值</td>
+                                <td>时间</td>
                             </tr>
-                        <{/foreach}>
-                        </tbody>
-                    </table>
+                            </tbody><tbody>
+                            <{foreach $list as $key=>$val}>
+                                <tr class="<{$val.scene}>">
+                                    <td></td>
+                                    <td><{$val@iteration}></td>
+                                    <td><{$val.valueShow}></td>
+                                    <td><{$val.normTimeShow}></td>
+                                </tr>
+                            <{/foreach}>
+                            </tbody>
+                        </table>
+                    </div>
                     <{$pageShow}>
                 </div>
                 <div class="col-xs-7" >
