@@ -172,14 +172,14 @@ $(function(){
                 {
                     type:'inside',
                     show: true,
-                    start : <{$zoomStart}>,
-                    end : <{$zoomEnd}>
+                    startValue:<{$zoomStartValue}>,
+                    endValue:<{$zoomEndValue}>,
                 },
                 {
                     type:'slider',
                     show: true,
-                    start : 90,
-                    end : <{$zoomEnd}>,
+                    startValue:<{$zoomStartValue}>,
+                    endValue:<{$zoomEndValue}>,
                     labelFormatter:formatTime
                 }
 

@@ -22,7 +22,7 @@ class NormModel extends CI_Model{
         //$sql  = "SELECT * FROM `{$this->db->dbprefix('norm')}` ORDER BY `updTime` DESC,`createTime` DESC";
         //$resList = $this->db->query($sql)->result_array();
         $this->db->where($where);
-        $this->db->order_by('updTime','DESC');
+        $this->db->order_by('normTime','DESC');
         $this->db->limit($perPage,$offset);
 
         return $this->db->get('norm')->result_array();
@@ -110,6 +110,15 @@ class NormModel extends CI_Model{
 
          return $this->db->query($sql)->result_array();
      }
+
+    /**csw
+     * 获取某个指标最近的n条统计信息
+     */
+    public function getNormRecentCensus($normId,$maxTime,$offset,$limit)
+    {
+        $sql ="SELECT * FROM `{$this->db->dbprefix('norm_census')}` WHERE `normId`='{$normId}' AND `normTime`<='{$maxTime}' ORDER BY `normTime` DESC LIMIT {$offset},{$limit}";
+        return $this->db->query($sql)->result_array();
+    }
 
      /**csw
       * 添加指标统计数据
@@ -210,4 +219,5 @@ class NormModel extends CI_Model{
          $sql ="SELECT * FROM `{$this->db->dbprefix('norm')}` WHERE `name`='{$name}'";
          return $this->db->query($sql)->row_array();
      }
+
 }
