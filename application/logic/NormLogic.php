@@ -314,7 +314,7 @@ class NormLogic extends CI_Logic{
             return $this->returnMsg(101,'未获取到指标信息');
 
         $pageNum = intval($pageNum) <= 0 ? 1 : $pageNum;
-        $perPage = 8;
+        $perPage = 50;
         $offset = $this->getOffset($pageNum,$perPage);
 
         $where = array();
