@@ -25,11 +25,12 @@ class Test extends CI_Controller{
         $this->load->logic('normLogic');
         $this->load->logic('registerLogic');
 
-        $normId = 3;
-        $normValue = 2000;
+        $normId = 189;
+        $normValue = 1807.40;
         $normTime = 1526629830;
 
-        $resAdd = $this->normLogic->addNormCensus($normId,$normValue,$normTime);
+        //$resAdd = $this->normLogic->addNormCensus($normId,$normValue,$normTime);
+        $resAdd = array('errNo'=>0,'errMsg'=>'');
        /* header('Content-type:application/json');
         echo json_encode($resAdd);*/
         $this->registerLogic->run($normId,$normValue,$normTime,$resAdd);

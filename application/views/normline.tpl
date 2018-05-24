@@ -173,11 +173,13 @@ $(function(){
                     type:'inside',
                     show: true,
                     start : <{$zoomStart}>,
+                    end : <{$zoomEnd}>
                 },
                 {
                     type:'slider',
                     show: true,
                     start : 90,
+                    end : <{$zoomEnd}>,
                     labelFormatter:formatTime
                 }
 
