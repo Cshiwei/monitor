@@ -22,7 +22,7 @@ class NormModel extends CI_Model{
         //$sql  = "SELECT * FROM `{$this->db->dbprefix('norm')}` ORDER BY `updTime` DESC,`createTime` DESC";
         //$resList = $this->db->query($sql)->result_array();
         $this->db->where($where);
-        $this->db->order_by('normTime','DESC');
+        $this->db->order_by('updTime','DESC');
         $this->db->limit($perPage,$offset);
 
         return $this->db->get('norm')->result_array();
