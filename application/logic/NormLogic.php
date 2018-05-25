@@ -404,6 +404,7 @@ class NormLogic extends CI_Logic{
     public function line($normId,$beginDay,$endDay)
     {
         $this->load->model('normModel');
+        $this->config->load('norm');
         if(empty($normId))
             return $this->returnMsg(101,'无效的指标ID');
 
@@ -449,6 +450,12 @@ class NormLogic extends CI_Logic{
             $resCensus = $this->normModel->normCensus($whereArr,'','',array('normTime'=>'ASC'));
             if($resCensus)
             {
+                /*$legend[] = array(
+                    'name' => date('Y-m-d',$i),
+                    'textStyle' => array(
+                        'color' => 'red',
+                    ),
+                );*/
                 $legend[] = date('Y-m-d',$i);
                 $censusData = array();
                 foreach ($resCensus as $key=>$val)
@@ -467,6 +474,14 @@ class NormLogic extends CI_Logic{
                 );
             }
         }
+
+        $colorArr = $this->config->item('colors');
+        $recentColor = $this->config->item('recentColor');
+        array_splice($colorArr,count($dayArr)-1,0,array(0=>$recentColor));
+        $colorStr = json_encode($colorArr);
+
+        $markLineColor = $this->config->item('markLineColor');
+
         if(empty($dayArr))
             $haveData = 0;
         else
@@ -482,6 +497,9 @@ class NormLogic extends CI_Logic{
                                                 )
                                             ),
                                         ),
+                                        'lineStyle'=>array(
+                                            'color' => $markLineColor,
+                                        ),
                                         'label' => array(
                                             'formatter' => "{b}: {$resNorm['threshold']}",
                                         )
@@ -493,6 +511,7 @@ class NormLogic extends CI_Logic{
             'zoomEndValue' => $zoomEndValue,
             'zoomStartValue' => $zoomStartValue,
             'haveData' => $haveData,
+            'color' => $colorStr,
         );
         return $this->returnMsg(0,$res);
     }

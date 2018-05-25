@@ -53,3 +53,8 @@ $config['unit'] = array(
         'val'  => 'day',
     ),
 );
+$config['recentColor'] ='#c23531';
+$config['markLineColor'] = '#23531';
+$config['colors'] = array(
+    '#2f4554', '#61a0a8', '#d48265', '#91c7ae','#749f83',  '#ca8622', '#bda29a','#6e7074', '#546570', '#c4ccd3'
+);

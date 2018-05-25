@@ -188,6 +188,7 @@ class Norm extends CI_Controller{
             $lineStr = json_encode($resLine['result']['lineArr']);
             $legend = json_encode($resLine['result']['legend']);
 
+            $this->assign('color',$resLine['result']['color']);
             $this->assign('haveData',$resLine['result']['haveData']);
             $this->assign('zoomStartValue',$resLine['result']['zoomStartValue']);
             $this->assign('zoomEndValue',$resLine['result']['zoomEndValue']);
