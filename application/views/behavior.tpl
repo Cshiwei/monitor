@@ -57,6 +57,11 @@
                             -->
                             <a class="btn btn-default btn-xs" href="/behavior/detail?id=<{$val.id}>" role="button">详情</a>
                             <a class="btn btn-default btn-xs edit-norm" data-id="<{$val.id}>" href="/behavior/edit?id=<{$val.id}>" role="button">编辑</a>
+                            <{if $val.status eq 1}>
+                                <a class="btn btn-default btn-xs disabledBehavior" data-id="<{$val.id}>" role="button">禁用</a>
+                            <{else}>
+                                <a class="btn btn-default btn-xs enableBehavior" data-id="<{$val.id}>" role="button">启用</a>
+                            <{/if}>
                         </td>
                     </tr>
                 <{/foreach}>
@@ -73,5 +78,33 @@
 <script src="/static/bootstrap/js/bootstrap.min.js"></script>
 <script src="/static/js/common.js"></script>
 <script>
+    $(function(){
+        $(".enableBehavior").click(function(){
+            var id = $(this).data("id");
+            var url = "/behavior/enableBehavior";
+            $.post(url,{id:id},function(res){
+                if(res.errNo===0){
+                    myAlert("启用成功,即将刷新页面",1);
+                    setTimeout("window.location.reload()",2000);
+                }else{
+                    myAlert(res.errMsg);
+                }
+            })
+        })
+
+        $(".disabledBehavior").click(function(){
+            var id = $(this).data("id");
+            var url = '/behavior/disabledBehavior';
+            $.post(url,{id:id},function(res){
+                if(res.errNo===0){
+                    myAlert("禁用成功，即将刷新页面",1);
+                    setTimeout("window.location.reload()",2000);
+                }else{
+                    myAlert(res.errMsg);
+                }
+            })
+        })
+
+    })
 </script>
 </html>

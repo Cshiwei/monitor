@@ -395,7 +395,7 @@ class EffectLogic extends CI_Logic{
 
         $resNorm['thresholdShow'] = $this->normLogic->getThresholdShow($resNorm['relation'],$resNorm['threshold'],$resNorm['unit']);
 
-        $num = 8;
+        $num = 50;
         $resRencent = $this->normLogic->recentCensus($normId,$num);
         $list = $resRencent['errNo']==0 ? $resRencent['result'] : array();
 

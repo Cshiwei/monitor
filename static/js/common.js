@@ -13,13 +13,16 @@ function addAlert(obj,content,type) {
 }
 
 //模态框代替alert框
-function myAlert(msg)
+function myAlert(msg,isStatic)
 {
     var alertDom = '<div class="modal fade" id="_alertModel" tabindex="-1" role="dialog">\n' +
         '  <div class="modal-dialog modal-sm" style="width:400px;" role="document">\n' +
         '    <div class="modal-content">\n' +
-        '      <div class="modal-header">\n' +
-        '        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>\n' +
+        '      <div class="modal-header">\n';
+    if(!isStatic){
+        alertDom += '        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>\n';
+    }
+        alertDom +=
         '        <h4 class="modal-title">警告</h4>\n' +
         '      </div>\n' +
         '      <div class="modal-body">\n' +
@@ -29,6 +32,9 @@ function myAlert(msg)
         '  </div><!-- /.modal-dialog -->\n' +
         '</div><!-- /.modal -->';
     $("body").append(alertDom);
+    if(isStatic){
+        $('#_alertModel').modal({backdrop: 'static', keyboard: false});
+    }
     $("#_alertModel").modal('show')
     $("#_alertModel").on("hidden.bs.modal",function(){
         $("_alertModel").remove();

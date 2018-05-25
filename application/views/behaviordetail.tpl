@@ -123,7 +123,7 @@
             var url = "/behavior/enableBehavior";
             $.post(url,{id:id},function(res){
                 if(res.errNo===0){
-                    myAlert("启用成功,即将刷新页面");
+                    myAlert("启用成功,即将刷新页面",1);
                     setTimeout("window.location.reload()",2000);
                 }else{
                     myAlert(res.errMsg);
@@ -136,7 +136,7 @@
             var url = '/behavior/disabledBehavior';
             $.post(url,{id:id},function(res){
                 if(res.errNo===0){
-                    myAlert("禁用成功，即将刷新页面");
+                    myAlert("禁用成功，即将刷新页面",1);
                     setTimeout("window.location.reload()",2000);
                 }else{
                     myAlert(res.errMsg);
