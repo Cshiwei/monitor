@@ -31,7 +31,7 @@ class BehaviorModel extends CI_Model{
                 case self::$TASK_TYPE_EMAIL :
                     $data = array(
                         'behaviorId' => $behaviorId,
-                        'title' => $taskParam['emailTitle'],
+                        'title' => "【Monitor】 ".$taskParam['emailTitle'],
                         'emailTo'   => $taskParam['emailTo'],
                         'content' => $taskParam['emailContent'],
                     );
@@ -120,7 +120,7 @@ class BehaviorModel extends CI_Model{
         {
             case self::$TASK_TYPE_EMAIL :
                 $data = array(
-                    'title' => $taskParam['emailTitle'],
+                    'title' => '【Monitor】 '.$taskParam['emailTitle'],
                     'emailTo'   => $taskParam['emailTo'],
                     'content' => $taskParam['emailContent'],
                 );

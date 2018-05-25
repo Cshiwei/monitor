@@ -6,6 +6,7 @@
     <title>Behavior</title>
 
     <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/common.css" rel="stylesheet">
 </head>
 <body>
 <div class="container-fluid">
@@ -43,7 +44,13 @@
             </div>
             <div class="row">
                 <div class="col-xs-12">
-                    <p>状态：<{$info.statusShow}></p>
+                    <p>状态：<{if $info.status eq 1}>
+                    <img style="width:12px;height:12px;" src="/static/svg/run.svg" />
+                        <{else}>
+                    <img style="width:12px;height:12px;" src="/static/svg/disabled.svg" />
+                        <{/if}>
+                        <{$info.statusShow}>
+                    </p>
                     <p>触发指标:<{$info.thresholdShow}></p>
                     <p>描述：<{$info.desc}></p>
                 </div>

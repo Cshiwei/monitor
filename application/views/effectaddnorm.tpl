@@ -6,6 +6,7 @@
     <title>影响-添加指标</title>
 
     <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/common.css" rel="stylesheet">
 </head>
 <body>
 <div class="container-fluid">

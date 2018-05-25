@@ -6,6 +6,7 @@
     <title>编辑行为</title>
 
     <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/common.css" rel="stylesheet">
 </head>
 <body>
 <div class="container-fluid">
@@ -90,7 +91,10 @@
                         <div class="form-group emailFm">
                             <label for="emailTitle" class="col-xs-2 control-label">邮件标题</label>
                             <div class="col-xs-4">
-                                <input id="emailTitle" class="form-control" type="text" name="emailTitle" value="<{if $info.taskInfo.title}><{$info.taskInfo.title}><{/if}>"/>
+                                <div class="input-group">
+                                    <div class="input-group-addon">【Monitor】</div>
+                                    <input id="emailTitle" class="form-control" type="text" name="emailTitle" value="<{if $info.taskInfo.title}><{$info.taskInfo.title}><{/if}>"/>
+                                </div>
                             </div>
                         </div>
                         <div class="form-group emailFm">
