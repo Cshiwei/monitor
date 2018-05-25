@@ -6,7 +6,7 @@
     <title>指标详情</title>
 
     <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-</head>
+    <link href="/static/css/common.css" rel="stylesheet">
 <body>
 <div class="container-fluid">
     <!--banner -->
@@ -38,8 +38,7 @@
             </div>
             <div class="row">
                 <div class="col-xs-9">
-                    <p>
-                    <form class="form-inline" method="get" action="/norm/normDetail">
+                    <form class="form-inline "  method="get" action="/norm/normDetail">
                     <input type="hidden" name="normId" value="<{$info.id}>"/>
                         <div class="form-group">
                             <label class="sr-only" for="name">time</label>
@@ -49,16 +48,18 @@
                             <input type="submit" class="form-control" id="exampleInputPassword3" >
                         </div>
                     </form>
-                    </p>
+                    <br/>
                     <div class="pre-scrollable">
-                        <table class="table table-condensed">
-                            <tbody><tr>
-                                <td></td>
-                                <td>序号</td>
-                                <td>值</td>
-                                <td>时间</td>
+                        <table class="table table-responsive">
+                            <thead>
+                            <tr>
+                                <th></th>
+                                <th>序号</th>
+                                <th>值</th>
+                                <th>时间</th>
                             </tr>
-                            </tbody><tbody>
+                            </thead>
+                            <tbody>
                             <{foreach $list as $key=>$val}>
                                 <tr class="<{$val.scene}>">
                                     <td></td>

@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>添加影响</title>
     <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/common.css" rel="stylesheet">
 </head>
 <body>
 <div class="container-fluid">
@@ -16,6 +17,15 @@
         <{include file="common/slidebar.tpl"}>
         <!--/slidebar-->
         <div class="col-xs-9">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="page-header">
+                        <div class="dropdown pull-right">
+                        </div>
+                        <h4>添加影响<small> </small></h4>
+                    </div>
+                </div>
+            </div>
             <!--提示信息-->
             <div class="row">
                 <div class="col-xs-12" id="alertDom">

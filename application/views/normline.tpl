@@ -11,6 +11,7 @@
     <link href="/static/bootstrap/datepicker/css/bootstrap-datepicker3.standalone.min.css" rel="stylesheet">
     -->
     <link href="/static/bootstrap/datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+    <link href="/static/css/common.css" rel="stylesheet">
 </head>
 <body>
 <div class="container-fluid">

@@ -6,6 +6,7 @@
     <title>行为</title>
 
     <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/common.css" rel="stylesheet">
 </head>
 <body>
 <div class="container-fluid">
@@ -35,7 +36,14 @@
                         <td><{$val.id}></td>
                         <td><{$val.name}></td>
                         <td class="td-hidden"><{$val.desc}></td>
-                        <td><{$val.statusShow}></td>
+                        <td>
+                            <{if $val.status eq 1}>
+                                <img style="width:12px;height:12px;" src="/static/svg/run.svg" />
+                            <{else}>
+                                <img style="width:12px;height:12px;" src="/static/svg/disabled.svg" />
+                            <{/if}>
+                            <{$val.statusShow}>
+                        </td>
                         <td>
                             <!--
                     <a class="btn btn-default btn-xs effect-norm" href="/effect?norm=<{$val.name}>" data-id="<{$val.id}>" role="button">影响</a>
