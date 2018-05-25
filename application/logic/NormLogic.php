@@ -497,9 +497,9 @@ class NormLogic extends CI_Logic{
                                                 )
                                             ),
                                         ),
-                                        'lineStyle'=>array(
+                                        /*'lineStyle'=>array(
                                             'color' => $markLineColor,
-                                        ),
+                                        ),*/
                                         'label' => array(
                                             'formatter' => "{b}: {$resNorm['threshold']}",
                                         )
