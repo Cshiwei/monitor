@@ -184,6 +184,7 @@ $(function(){
                 }
 
             ],
+            color:<{$color}>,
             legend : {
                 data : <{$legend}>
             },

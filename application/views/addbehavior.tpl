@@ -78,7 +78,10 @@
                         <div class="form-group emailFm">
                             <label for="emailTitle" class="col-xs-2 control-label">邮件标题</label>
                             <div class="col-xs-4">
-                                <input id="emailTitle" class="form-control" type="text" name="emailTitle"/>
+                                <div class="input-group">
+                                    <div class="input-group-addon">【Monitor】</div>
+                                    <input id="emailTitle" class="form-control" type="text" name="emailTitle"/>
+                                </div>
                             </div>
                         </div>
                         <div class="form-group emailFm">
