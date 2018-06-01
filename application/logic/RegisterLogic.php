@@ -113,6 +113,17 @@ class RegisterLogic extends CI_Logic{
         //$this->out[]=$out;
     }
 
+    public function swooleRunJob($jobName)
+    {
+        $url = '192.168.66.41';
+        $sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+        $resConnect = socket_connect($sock,$url,9505);
+        if($resConnect)
+        {
+            socket_write($sock,'hello world');
+        }
+    }
+
     /*public function runJob()
     {
         $this->config->load('behavior');
