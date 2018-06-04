@@ -16,7 +16,6 @@ class Worker extends CI_Controller{
     public function run()
     {
         define('CISWOOLE', TRUE);
-        register_shutdown_function(array($this, 'handleFatal'));
         $http = new swoole_http_server("0.0.0.0", 9505);
         $http->set (array(
             'worker_num' => 8,		//worker进程数量
@@ -61,6 +60,7 @@ class Worker extends CI_Controller{
      */
     public function onRequest($request, $response)
     {
-        log_message('hello every one?');
+        var_dump($request);
+        log_message('debug','hello every one?');
     }
 }
