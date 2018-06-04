@@ -60,9 +60,12 @@ class Worker extends CI_Controller{
      */
     public function onRequest($request, $response)
     {
+        log_message('debug','接收到任务请求');
         $jobId = $request->get['jobId'];
+        log_message('debug',"获取到任务ID{$jobId}");
         $this->load->logic('jobLogic');
         $resJob = $this->jobLogic->run($jobId);
+        log_message('debug',"执行完毕".serialize($resJob));
         if($resJob['errNo']!=0)
             log_message('error',$resJob['errMsg']);
 
