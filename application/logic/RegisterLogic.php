@@ -114,8 +114,6 @@ class RegisterLogic extends CI_Logic{
         if($resConnect)
         {
             socket_write($sock,$out);
-            $res = socket_read($sock,1000);
-            echo $res;
             $this->sockPool[] = $sock;
         }
     }
