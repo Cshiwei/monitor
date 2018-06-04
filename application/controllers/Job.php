@@ -17,7 +17,7 @@ class Job extends CI_Controller{
         $resJobInfo = $this->jobLogic->getJobInfo($jobId);
         if($resJobInfo['errNo']!=0)
         {
-            log_message('dbug','未获取到job信息');
+            log_message('debug','未获取到job信息');
             return false;
         }
 

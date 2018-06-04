@@ -7,6 +7,8 @@
  */
 class Test extends CI_Controller{
 
+    public $sockPool = array();
+
     public function run()
     {
         if(ENVIRONMENT == 'production')
@@ -80,12 +82,35 @@ class Test extends CI_Controller{
 
     private function testSwoole()
     {
-        $this->load->logic('registerLogic');
-        $this->registerLogic->swooleRunJob('email');
+        $this->load->model('behaviorModel');
+
+        //$url = 'monitor.litb-test.com';
+        //$port = 9505;
+        $url = 'mymonitor.litb-test.com';
+        $port = 80;
+        $out = "GET /job/run?jobId=5 HTTP/1.1\r\n";
+        $out .= "Host: {$url}\r\n";
+        $out .= "Cookie:XDEBUG_SESSION=XDEBUG_ECLIPSE\r\n\r\n";
+
+        $sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+        $resConnect = socket_connect($sock,$url,$port);
+
+        if($resConnect)
+        {
+            socket_write($sock,$out);
+            $this->sockPool[] = $sock;
+        }
     }
 
-    private function testPost()
+    public function __destruct()
     {
+        if(!empty($this->sockPool))
+        {
+            foreach ($this->sockPool as $key=>$val)
+            {
+                socket_close($val);
+            }
+        }
 
     }
 }
