@@ -19,9 +19,9 @@ class Worker extends CI_Controller{
         $http = new swoole_http_server("0.0.0.0", 9505);
         $http->set (array(
             'worker_num' => 8,		//worker进程数量
-            'daemonize' => false,	//守护进程设置成true
+            'daemonize' => True,	//守护进程设置成true
             'max_request' => 10000,	//最大请求次数，当请求大于它时，将会自动重启该worker
-            'dispatch_mode' => 1
+            'dispatch_mode' => 1,
         ));
         $http->on('WorkerStart', array($this, 'onWorkerStart'));
         $http->on('request', array($this, 'onRequest'));
