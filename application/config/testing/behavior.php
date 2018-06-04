@@ -10,3 +10,4 @@ $config['beyondNormEmail'] = array(
     'caoshiwei@lightinthebox.com',
 );
 $config['baseUrl'] = 'monitor.litb-test.com';
+$config['jobPort'] = 9505;

@@ -12,3 +12,4 @@ $config['normBeyondEmail'] = array(
 );
 
 $config['baseUrl'] = 'monitor.tbox.me';
+$config['jobPort'] = 9505;

@@ -10,3 +10,4 @@ $config['normBeyondEmail'] = array(
         'caoshiwei@lightinthebox.com',
 );
 
+$config['jobPort'] = 80;

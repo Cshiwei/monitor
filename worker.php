@@ -6,27 +6,16 @@
  * Time: 10:32
  */
 
-//创建Server对象，监听 127.0.0.1:9501端口
-$serv = new swoole_server("192.168.66.41", 9505);
-$serv->set(array(
-    'worker_num' => 4,    //worker process num
-    'daemonize' => 1,
-));
+$http = new swoole_http_server("127.0.0.1", 9501);
 
-//监听连接进入事件
-$serv->on('connect', function ($serv, $fd) {
-    echo "Client: Connect.\n";
+$http->on("start", function ($server) {
+    echo "Swoole http server is started at http://127.0.0.1:9501\n";
 });
 
-//监听数据接收事件
-$serv->on('receive', function ($serv, $fd, $from_id, $data) {
-    $serv->send($fd, "Server: ".$data);
+$http->on("request", function ($request, $response) {
+    $paramStr = $request->post['param'];
+    $param = json_decode($paramStr,true);
+
 });
 
-//监听连接关闭事件
-$serv->on('close', function ($serv, $fd) {
-    echo "Client: Close.\n";
-});
-
-//启动服务器
-$serv->start();
+$http->start();
