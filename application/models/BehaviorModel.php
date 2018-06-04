@@ -213,7 +213,7 @@ class BehaviorModel extends CI_Model{
 
     public function getJobInfo($jobId)
     {
-        $sql = "SELECT * FROM `{$this->db->dbprefix('monitor_job')}` WHERE `id`='{$jobId}'";
+        $sql = "SELECT * FROM `{$this->db->dbprefix('job')}` WHERE `id`='{$jobId}'";
         return $this->db->query($sql)->result_array();
     }
 }
