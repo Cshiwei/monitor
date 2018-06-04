@@ -86,8 +86,8 @@ class Test extends CI_Controller{
 
         //$url = 'monitor.litb-test.com';
         //$port = 9505;
-        $url = 'mymonitor.litb-test.com';
-        $port = 80;
+        $url = 'monitor.litb-test.com';
+        $port = 9505;
         $out = "GET /job/run?jobId=5 HTTP/1.1\r\n";
         $out .= "Host: {$url}\r\n";
         $out .= "Cookie:XDEBUG_SESSION=XDEBUG_ECLIPSE\r\n\r\n";
