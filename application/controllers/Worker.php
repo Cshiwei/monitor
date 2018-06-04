@@ -27,13 +27,13 @@ class Worker extends CI_Controller{
         $http->start();
     }
 
-    public function TaskRun()
+    public function taskRun()
     {
         $task = new swoole_server('0.0.0.0', 9505);   // 允许所有IP访问
         $task->set(array(
             'worker_num' => 4,   // 一般设置为服务器CPU数的1-4倍
             'task_worker_num' => 1,  // task进程的数量（一般任务都是同步阻塞的，可以设置为单进程单线程）
-            'daemonize' => true,  // 以守护进程执行
+            'daemonize' => False,  // 以守护进程执行
             'package_eof' => PHP_EOL,  // 设置EOF
             'open_eof_split' => true,  // 按照EOF进行分包，防止TCP粘包
             //  'task_ipc_mode' => 1,  // 使用unix socket通信，默认模式
