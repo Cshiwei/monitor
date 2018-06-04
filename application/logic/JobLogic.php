@@ -62,9 +62,10 @@ class JobLogic extends CI_Logic{
     public function _taskBegin()
     {
         $this->load->model('behaviorModel');
-        $behaviorId = $this->param['behaviorId'];
+        $behaviorId = $this->param['behaviorId'] ? $this->param['behaviorId'] : '';
         $now = time();
         $data = array(
+            'jobId' => $this->param['jobId'],
             'behaviorId' => $behaviorId,
             'beginTime' => $now,
             'createTime' => $now,
@@ -85,5 +86,18 @@ class JobLogic extends CI_Logic{
             'updTime' => $now,
         );
         $this->behaviorModel->endTaskLog($logId,$data);
+    }
+
+    public function getJobInfo($jobId)
+    {
+        if(empty($jobId))
+            return $this->returnMsg(101,'无效的jobID');
+
+        $this->load->model('behaviorModel');
+        $resJobInfo = $this->behaviorModel->getJobInfo($jobId);
+        if(!$resJobInfo)
+            return $this->returnMsg(102,'未获取到job信息');
+
+        return $this->returnMsg(0,$resJobInfo);
     }
 }

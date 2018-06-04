@@ -1,3 +1,11 @@
 .page-header {
     margin-top:10px;
 }
+
+.dl-horizontal.dl-left dt{
+    width:100px;
+}
+
+.dl-horizontal.dl-left dd{
+    margin-left: 120px;
+}

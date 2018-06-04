@@ -286,4 +286,5 @@ class BehaviorLogic extends CI_Logic{
         return $this->returnMsg(0);
     }
 
+
 }

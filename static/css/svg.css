@@ -1,0 +1,24 @@
+.svg {
+    width:12px;
+    height: 12px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.svg-sm{
+    width: 8px;
+    height: 8px;
+}
+.svg-lg{
+    width: 16px;
+    height:16px;
+}
+
+
+.svg-run{
+    background-image: url("/static/svg/run.svg")
+}
+
+.svg-disabled{
+    background-image: url("/static/svg/disabled.svg");
+}

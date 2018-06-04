@@ -201,4 +201,19 @@ class BehaviorModel extends CI_Model{
     {
         $this->db->update('task_log',$data,array('id'=>$logId));
     }
+
+    public function addJob($data)
+    {
+        $resAdd = $this->db->insert('job',$data);
+        if($resAdd)
+            return $this->db->insert_id();
+
+        return $resAdd;
+    }
+
+    public function getJobInfo($jobId)
+    {
+        $sql = "SELECT * FROM `{$this->db->dbprefix('monitor_job')}` WHERE `id`='{$jobId}'";
+        return $this->db->query($sql)->result_array();
+    }
 }

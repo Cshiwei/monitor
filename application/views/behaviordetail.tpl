@@ -7,6 +7,7 @@
 
     <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="/static/css/common.css" rel="stylesheet">
+    <link href="/static/css/svg.css" rel="stylesheet">
 </head>
 <body>
 <div class="container-fluid">
@@ -44,15 +45,23 @@
             </div>
             <div class="row">
                 <div class="col-xs-12">
-                    <p>状态：<{if $info.status eq 1}>
-                    <img style="width:12px;height:12px;" src="/static/svg/run.svg" />
-                        <{else}>
-                    <img style="width:12px;height:12px;" src="/static/svg/disabled.svg" />
-                        <{/if}>
-                        <{$info.statusShow}>
-                    </p>
-                    <p>触发指标:<{$info.thresholdShow}></p>
-                    <p>描述：<{$info.desc}></p>
+                    <dl class="dl-horizontal dl-left">
+                        <dt>状态:</dt>
+                        <dd>
+                            <{if $info.status eq 1}>
+                                <span class="svg svg-run"></span>
+                            <{else}>
+                                <span class="svg svg-disabled"></span>
+                            <{/if}>
+                            <{$info.statusShow}>
+                        </dd>
+
+                        <dt>触发指标:</dt>
+                        <dd><{$info.thresholdShow}></dd>
+
+                        <dt>描述：</dt>
+                        <dd><{$info.desc}></dd>
+                    </dl>
                 </div>
             </div>
             <div class="row">
@@ -63,10 +72,19 @@
             <div class="row">
                 <{if $info.taskType eq 1}>
                     <div class="col-xs-12">
-                        <p>任务类型: 邮件</p>
-                        <p>邮件标题：<{$info.taskInfo.title}></p>
-                        <p>收件人：<{$info.taskInfo.emailTo}></p>
-                        <p>邮件内容:<{$info.taskInfo.content}></p>
+                        <dl class="dl-horizontal dl-left">
+                            <dt>任务类型:</dt>
+                            <dd>邮件</dd>
+
+                            <dt>邮件标题：</dt>
+                            <dd><{$info.taskInfo.title}></dd>
+
+                            <dt>收件人：</dt>
+                            <dd><{$info.taskInfo.emailTo}></dd>
+
+                            <dt>邮件内容：</dt>
+                            <dd><{$info.taskInfo.content}></dd>
+                        </dl>
                     </div>
                 <{/if}>
             </div>

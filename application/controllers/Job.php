@@ -13,12 +13,21 @@ class Job extends CI_Controller{
     {
         log_message('debug','Job run is initialized');
         $this->load->logic('jobLogic');
-        $jobName= $this->input->get('jobName');
+        $jobId = $this->input->get('jobId');
+        $resJobInfo = $this->jobLogic->getJobInfo($jobId);
+        if($resJobInfo['errNo']!=0)
+        {
+            log_message('dbug','未获取到job信息');
+            return false;
+        }
+
+        $jobParam = $resJobInfo['param'];
+        $jobName = $jobParam['param'];
+        $jobParam['jobId'] = $jobId;
         if(!$jobName)
             log_message('debug','未获取到jobName');
 
-        $param = json_decode($this->input->post('param'),true);
-        $this->jobLogic->setParam($param,true);
+        $this->jobLogic->setParam($jobParam,true);
         log_message('debug','成功设置参数');
         if(method_exists($this->jobLogic,$jobName))
         {
@@ -29,4 +38,5 @@ class Job extends CI_Controller{
             log_message('debug','任务运行完毕');
         }
     }
+
 }

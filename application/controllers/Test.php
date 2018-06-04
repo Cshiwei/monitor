@@ -77,4 +77,15 @@ class Test extends CI_Controller{
         $this->load->logic('normLogic');
         $this->normLogic->addTestData();
     }
+
+    private function testSwoole()
+    {
+        $this->load->logic('registerLogic');
+        $this->registerLogic->swooleRunJob('email');
+    }
+
+    private function testPost()
+    {
+
+    }
 }

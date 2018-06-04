@@ -88,30 +88,35 @@ class RegisterLogic extends CI_Logic{
 
     public function runJob($jobName)
     {
+        $this->load->model('behaviorModel');
+
+        $data = array(
+            'name' => $jobName,
+            'param' => json_encode($this->param),
+            'createTime' => time(),
+        );
+        $resJobId = $this->behaviorModel->addJob($data);
+        if(!$resJobId)
+            return $this->returnMsg(101,'注册job失败');
+
         $this->config->load('behavior');
         $url = $this->config->item('jobUrl');
+        $port = $this->config->item('jobPort');
 
-        $paramStr = 'param='.json_encode($this->param);
-        $length = mb_strlen($paramStr);
-
-        $out = "POST /job/run?jobName={$jobName} HTTP/1.1\r\n";
+        $out = "GET /job/run?jobId={$resJobId} HTTP/1.1\r\n";
         $out .= "Host: {$url}\r\n";
         $out .= "Cookie:XDEBUG_SESSION=XDEBUG_ECLIPSE\r\n";
-        $out .= "Content-Type: application/x-www-form-urlencoded\r\n";
-        $out .= "Content-length: {$length}\r\n";
-        $out .= "Connection: keep-alive\r\n\r\n";
-        $out .= "{$paramStr}";
 
         $sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
-        $resConnect = socket_connect($sock,$url,80);
+        $resConnect = socket_connect($sock,$url,$port);
 
         if($resConnect)
         {
             socket_write($sock,$out);
             $this->sockPool[] = $sock;
         }
-        //$this->out[]=$out;
     }
+
 
     /*public function runJob()
     {

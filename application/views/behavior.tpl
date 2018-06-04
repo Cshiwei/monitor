@@ -7,6 +7,7 @@
 
     <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="/static/css/common.css" rel="stylesheet">
+    <link href="/static/css/svg.css" rel="stylesheet">
 </head>
 <body>
 <div class="container-fluid">
@@ -38,11 +39,11 @@
                         <td class="td-hidden"><{$val.desc}></td>
                         <td>
                             <{if $val.status eq 1}>
-                                <img style="width:12px;height:12px;" src="/static/svg/run.svg" />
+                                <span class="svg svg-run"></span>
                             <{else}>
-                                <img style="width:12px;height:12px;" src="/static/svg/disabled.svg" />
+                                <span class="svg svg-disabled"></span>
                             <{/if}>
-                            <{$val.statusShow}>
+                            &nbsp;&nbsp;<{$val.statusShow}>
                         </td>
                         <td>
                             <!--
