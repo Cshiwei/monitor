@@ -11,6 +11,10 @@ class Worker extends CI_Controller{
     {
         parent::__construct();
 
+    }
+
+    public function run()
+    {
         define('CISWOOLE', TRUE);
         register_shutdown_function(array($this, 'handleFatal'));
         $http = new swoole_http_server("0.0.0.0", 9505);
