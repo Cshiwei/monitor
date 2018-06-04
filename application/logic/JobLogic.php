@@ -18,7 +18,10 @@ class JobLogic extends CI_Logic{
 
     public function run($jobId)
     {
-        log_message('debug','开始执行任务，任务id为'.$jobId);
+        $s = rand(1,5);
+        log_message('debug','开始执行任务，任务id为'.$jobId.'执行'.$s.'秒');
+        sleep($jobId);
+        log_message('debug','任务执行完毕');
     }
 
     public function normBeyond()

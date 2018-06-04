@@ -61,8 +61,8 @@ class Worker extends CI_Controller{
     public function onRequest($request, $response)
     {
         log_message('debug','收到请求');
-       $jobId = $request->get['jobId'];
-       $this->load->logic('jobLogic');
-       $this->jobLogic->run($jobId);
+        $jobId = $request->get['jobId'];
+        $this->load->logic('jobLogic');
+        $this->jobLogic->run($jobId);
     }
 }
