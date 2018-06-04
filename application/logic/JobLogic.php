@@ -18,10 +18,27 @@ class JobLogic extends CI_Logic{
 
     public function run($jobId)
     {
-        $s = rand(1,5);
-        log_message('debug','开始执行任务，任务id为'.$jobId.'执行'.$s.'秒');
-        sleep($jobId);
-        log_message('debug','任务执行完毕');
+        if(empty($jobId))
+            return $this->returnMsg('101','无效的jobId');
+
+        $this->load->model('behaviorModel');
+        $resJobInfo = $this->behaviorModel->getJobInfo($jobId);
+        if(!$resJobInfo)
+            return $this->returnMsg('102','未获取到job信息');
+
+        $jobName = $resJobInfo['name'];
+        if(!method_exists($this,$jobName))
+            return $this->returnMsg('103','不存在该jobName');
+
+        $param = json_decode($resJobInfo['param'],true);
+        $resJob = $this->$jobName($param);
+        return $resJob;
+    }
+
+    public function testJob($param)
+    {
+        log_message('debug','我是testJob');
+        return $this->returnMsg(0);
     }
 
     public function normBeyond()

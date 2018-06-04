@@ -63,6 +63,7 @@ class Worker extends CI_Controller{
         log_message('debug','收到请求');
         $jobId = $request->get['jobId'];
         $this->load->logic('jobLogic');
-        $this->jobLogic->run($jobId);
+        $resJob = $this->jobLogic->run($jobId);
+        var_dump($resJob);
     }
 }
