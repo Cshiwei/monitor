@@ -190,7 +190,7 @@ class BehaviorModel extends CI_Model{
 
     public function beginTaskLog($data)
     {
-        $res = $this->db->insert('task_log',$data);
+        $res = $this->db->insert('job_log',$data);
         if($res)
             return $this->db->insert_id();
 
@@ -199,7 +199,7 @@ class BehaviorModel extends CI_Model{
 
     public function endTaskLog($logId,$data)
     {
-        $this->db->update('task_log',$data,array('id'=>$logId));
+        $this->db->update('job_log',$data,array('id'=>$logId));
     }
 
     public function addJob($data)

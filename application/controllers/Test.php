@@ -27,9 +27,9 @@ class Test extends CI_Controller{
         $this->load->logic('normLogic');
         $this->load->logic('registerLogic');
 
-        $normId = 189;
-        $normValue = 1807.40;
-        $normTime = 1526629830;
+        $normId = 191;
+        $normValue = 8;
+        $normTime = 1528096190;
 
         //$resAdd = $this->normLogic->addNormCensus($normId,$normValue,$normTime);
         $resAdd = array('errNo'=>0,'errMsg'=>'');

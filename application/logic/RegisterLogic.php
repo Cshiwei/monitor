@@ -77,7 +77,7 @@ class RegisterLogic extends CI_Logic{
                     switch($val['taskType'])
                     {
                         case self::$TASK_TYPE_EMAIL :
-                            $this->runJob('email');
+                            $this->runJob($val['id'],'email');
                             break;
                         default:
                     }
@@ -86,11 +86,12 @@ class RegisterLogic extends CI_Logic{
         }
     }
 
-    public function runJob($jobName)
+    public function runJob($behaviorId,$jobName)
     {
         $this->load->model('behaviorModel');
 
         $data = array(
+            'behaviorId' => $behaviorId,
             'name' => $jobName,
             'param' => json_encode($this->param),
             'createTime' => time(),
@@ -105,7 +106,7 @@ class RegisterLogic extends CI_Logic{
 
         $out = "GET /job/run?jobId={$resJobId} HTTP/1.1\r\n";
         $out .= "Host: {$url}\r\n";
-        $out .= "Cookie:XDEBUG_SESSION=XDEBUG_ECLIPSE\r\n";
+        $out .= "Cookie:XDEBUG_SESSION=XDEBUG_ECLIPSE\r\n\r\n";
 
         $sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
         $resConnect = socket_connect($sock,$url,$port);
@@ -113,6 +114,8 @@ class RegisterLogic extends CI_Logic{
         if($resConnect)
         {
             socket_write($sock,$out);
+            $res = socket_read($sock,1000);
+            echo $res;
             $this->sockPool[] = $sock;
         }
     }
