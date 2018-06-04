@@ -16,6 +16,11 @@ class JobLogic extends CI_Logic{
         $this->param = $param;
     }
 
+    public function run($jobId)
+    {
+        log_message('debug','开始执行任务，任务id为'.$jobId);
+    }
+
     public function normBeyond()
     {
         $baseUrl = $this->config->item('base_url');
