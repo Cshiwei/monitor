@@ -88,9 +88,9 @@ class RegisterLogic extends CI_Logic{
         }
     }
 
-    public function httpRun($behaviorId,$jobName)
+    public function runJob($behaviorId,$jobName)
     {
-        $this->config->load('behaviorType');
+        $this->config->load('behavior');
         $this->load->model('behaviorModel');
 
         $data = array(
@@ -103,11 +103,11 @@ class RegisterLogic extends CI_Logic{
         if(!$resJobId)
             return $this->returnMsg(101,'注册job失败');
 
-        $runType = $this->config->item('runJob');
+        $runType = $this->config->item('runType');
         switch($runType)
         {
             case self::$RUN_TYPE_HTTP :
-                $runMethod = 'httpJob';
+                $runMethod = 'httpRun';
                 break;
             case self::$RUN_TYPE_TASK :
                 $runMethod = 'taskRun';
@@ -119,7 +119,7 @@ class RegisterLogic extends CI_Logic{
             $this->$runMethod($resJobId);
     }
 
-    public function httpJob($jobId)
+    public function httpRun($jobId)
     {
         $this->config->load('behavior');
         $url = $this->config->item('httpJobUrl');
@@ -141,15 +141,16 @@ class RegisterLogic extends CI_Logic{
 
     public function taskRun($jobId)
     {
-        $client = new swoole_client(SWOOLE_SOCK_TCP);
+        $sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
         $url = $this->config->item('taskJobUrl');
         $port = $this->config->item('taskJobPort');
-
-        $client->connect($url, $port, 1);
-        $data = array(
-            'jobId' => $jobId,
-        );
-        $client->send($data.PHP_EOL);
+        $resConnect = socket_connect($sock,$url,$port);
+        if($resConnect)
+        {
+            $data = array('jobId'=>$jobId);
+            socket_write($sock,json_encode($data).PHP_EOL);
+            $this->sockPool[] = $sock;
+        }
     }
 
 
