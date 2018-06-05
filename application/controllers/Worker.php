@@ -7,9 +7,13 @@
  */
 class Worker extends CI_Controller{
 
+    public $daemonize = False;
+
     public function __construct()
     {
         parent::__construct();
+        if($argv[3] == '-d')
+            $this->daemonize = True;
     }
 
     public function httpRun()
@@ -18,7 +22,7 @@ class Worker extends CI_Controller{
         $http = new swoole_http_server("0.0.0.0", 9505);
         $http->set (array(
             'worker_num' => 8,		//worker进程数量
-            'daemonize' => True,	//守护进程设置成true
+            'daemonize' => $this->daemonize,	//守护进程设置成true
             'max_request' => 10000,	//最大请求次数，当请求大于它时，将会自动重启该worker
             'dispatch_mode' => 1,
         ));
@@ -34,7 +38,7 @@ class Worker extends CI_Controller{
         $task->set(array(
             'worker_num' => 4,   // 一般设置为服务器CPU数的1-4倍
             'task_worker_num' => 1,  // task进程的数量（一般任务都是同步阻塞的，可以设置为单进程单线程）
-            'daemonize' => True,  // 以守护进程执行
+            'daemonize' => $this->daemonize,  // 以守护进程执行
             'package_eof' => PHP_EOL,  // 设置EOF
             'open_eof_split' => true,  // 按照EOF进行分包，防止TCP粘包
             //  'task_ipc_mode' => 1,  // 使用unix socket通信，默认模式
