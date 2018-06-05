@@ -16,24 +16,32 @@ class JobLogic extends CI_Logic{
         $this->param = $param;
     }
 
-    public function normBeyond()
+    public function run($jobId)
     {
-        $baseUrl = $this->config->item('base_url');
+        if(empty($jobId))
+            return $this->returnMsg('101','无效的jobId');
 
-        $param = $this->param;
-        $normId = $param['normId'];
-        $normInfo = $param['normInfo'];
+        $this->load->model('behaviorModel');
+        $resJobInfo = $this->behaviorModel->getJobInfo($jobId);
+        if(!$resJobInfo)
+            return $this->returnMsg('102','未获取到job信息');
 
-        $this->load->library('email');
-        $this->email->from('caoshiwei@lightinthebox.com', 'caoshiwei');
-        $this->email->to('caoshiwei@lightinthebox.com');
-        $this->email->subject("指标[$normId]超出阈值请及时处理");
-        $this->email->message("指标[$normId]超出阈值请及时处理,<a href='{$baseUrl}norm/normDetail?normId={$normId}'>{$normInfo['name']}</a>");
-        $this->email->set_newline("\r\n");
+        $jobName = $resJobInfo['name'];
+        if(!method_exists($this,$jobName))
+            return $this->returnMsg('103','不存在该jobName');
 
-        $this->email->send();
-        $resSend = $this->email->print_debugger();
-        return $this->returnMsg(0,$resSend);
+        $param = json_decode($resJobInfo['param'],true);
+        $this->param = $param;
+        $logId = $this->_taskBegin($jobId);
+        $resJob = $this->$jobName();
+        $this->_taskEnd($logId,$resJob);
+        return $resJob;
+    }
+
+    public function testJob()
+    {
+        log_message('debug','我是testJob');
+        return $this->returnMsg(0);
     }
 
     public function email()
@@ -59,14 +67,12 @@ class JobLogic extends CI_Logic{
         return $this->returnMsg(0,$resSend);
     }
 
-    public function _taskBegin()
+    public function _taskBegin($jobId)
     {
         $this->load->model('behaviorModel');
-        $behaviorId = $this->param['behaviorId'] ? $this->param['behaviorId'] : '';
         $now = time();
         $data = array(
-            'jobId' => $this->param['jobId'],
-            'behaviorId' => $behaviorId,
+            'jobId' => $jobId,
             'beginTime' => $now,
             'createTime' => $now,
             'updTime' => $now,

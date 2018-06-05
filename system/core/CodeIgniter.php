@@ -217,7 +217,6 @@ if ( ! is_php('5.4'))
  *
  */
 	$CFG =& load_class('Config', 'core');
-
 	// Do we have any manually set config items in the index.php file?
 	if (isset($assign_to_config) && is_array($assign_to_config))
 	{

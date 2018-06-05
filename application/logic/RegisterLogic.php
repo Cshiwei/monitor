@@ -8,6 +8,8 @@
 
 class RegisterLogic extends CI_Logic{
 
+    static $RUN_TYPE_HTTP = 'http';
+    static $RUN_TYPE_TASK = 'task';
     //注册行为
     public $triggerArr = array();
 
@@ -77,7 +79,7 @@ class RegisterLogic extends CI_Logic{
                     switch($val['taskType'])
                     {
                         case self::$TASK_TYPE_EMAIL :
-                            $this->runJob('email');
+                            $this->runJob($val['id'],'email');
                             break;
                         default:
                     }
@@ -86,11 +88,13 @@ class RegisterLogic extends CI_Logic{
         }
     }
 
-    public function runJob($jobName)
+    public function runJob($behaviorId,$jobName)
     {
+        $this->config->load('behavior');
         $this->load->model('behaviorModel');
 
         $data = array(
+            'behaviorId' => $behaviorId,
             'name' => $jobName,
             'param' => json_encode($this->param),
             'createTime' => time(),
@@ -99,13 +103,31 @@ class RegisterLogic extends CI_Logic{
         if(!$resJobId)
             return $this->returnMsg(101,'注册job失败');
 
-        $this->config->load('behavior');
-        $url = $this->config->item('jobUrl');
-        $port = $this->config->item('jobPort');
+        $runType = $this->config->item('runType');
+        switch($runType)
+        {
+            case self::$RUN_TYPE_HTTP :
+                $runMethod = 'httpRun';
+                break;
+            case self::$RUN_TYPE_TASK :
+                $runMethod = 'taskRun';
+                break;
+            default:
+        }
 
-        $out = "GET /job/run?jobId={$resJobId} HTTP/1.1\r\n";
+        if($runMethod)
+            $this->$runMethod($resJobId);
+    }
+
+    public function httpRun($jobId)
+    {
+        $this->config->load('behavior');
+        $url = $this->config->item('httpJobUrl');
+        $port = $this->config->item('httpJobPort');
+
+        $out = "GET /job/run?jobId={$jobId} HTTP/1.1\r\n";
         $out .= "Host: {$url}\r\n";
-        $out .= "Cookie:XDEBUG_SESSION=XDEBUG_ECLIPSE\r\n";
+        $out .= "Cookie:XDEBUG_SESSION=XDEBUG_ECLIPSE\r\n\r\n";
 
         $sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
         $resConnect = socket_connect($sock,$url,$port);
@@ -113,6 +135,20 @@ class RegisterLogic extends CI_Logic{
         if($resConnect)
         {
             socket_write($sock,$out);
+            $this->sockPool[] = $sock;
+        }
+    }
+
+    public function taskRun($jobId)
+    {
+        $sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+        $url = $this->config->item('taskJobUrl');
+        $port = $this->config->item('taskJobPort');
+        $resConnect = socket_connect($sock,$url,$port);
+        if($resConnect)
+        {
+            $data = array('jobId'=>$jobId);
+            socket_write($sock,json_encode($data).PHP_EOL);
             $this->sockPool[] = $sock;
         }
     }
