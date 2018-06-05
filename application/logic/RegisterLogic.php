@@ -8,6 +8,8 @@
 
 class RegisterLogic extends CI_Logic{
 
+    static $RUN_TYPE_HTTP = 'http';
+    static $RUN_TYPE_TASK = 'task';
     //注册行为
     public $triggerArr = array();
 
@@ -86,8 +88,9 @@ class RegisterLogic extends CI_Logic{
         }
     }
 
-    public function runJob($behaviorId,$jobName)
+    public function httpRun($behaviorId,$jobName)
     {
+        $this->config->load('behaviorType');
         $this->load->model('behaviorModel');
 
         $data = array(
@@ -100,11 +103,29 @@ class RegisterLogic extends CI_Logic{
         if(!$resJobId)
             return $this->returnMsg(101,'注册job失败');
 
-        $this->config->load('behavior');
-        $url = $this->config->item('jobUrl');
-        $port = $this->config->item('jobPort');
+        $runType = $this->config->item('runJob');
+        switch($runType)
+        {
+            case self::$RUN_TYPE_HTTP :
+                $runMethod = 'httpJob';
+                break;
+            case self::$RUN_TYPE_TASK :
+                $runMethod = 'taskRun';
+                break;
+            default:
+        }
 
-        $out = "GET /job/run?jobId={$resJobId} HTTP/1.1\r\n";
+        if($runMethod)
+            $this->$runMethod($resJobId);
+    }
+
+    public function httpJob($jobId)
+    {
+        $this->config->load('behavior');
+        $url = $this->config->item('httpJobUrl');
+        $port = $this->config->item('httpJobPort');
+
+        $out = "GET /job/run?jobId={$jobId} HTTP/1.1\r\n";
         $out .= "Host: {$url}\r\n";
         $out .= "Cookie:XDEBUG_SESSION=XDEBUG_ECLIPSE\r\n\r\n";
 
@@ -116,6 +137,19 @@ class RegisterLogic extends CI_Logic{
             socket_write($sock,$out);
             $this->sockPool[] = $sock;
         }
+    }
+
+    public function taskRun($jobId)
+    {
+        $client = new swoole_client(SWOOLE_SOCK_TCP);
+        $url = $this->config->item('taskJobUrl');
+        $port = $this->config->item('taskJobPort');
+
+        $client->connect($url, $port, 1);
+        $data = array(
+            'jobId' => $jobId,
+        );
+        $client->send($data.PHP_EOL);
     }
 
 
