@@ -11,8 +11,9 @@ class Worker extends CI_Controller{
 
     public function __construct()
     {
+        global $argv;
         parent::__construct();
-        if($argv[3] == '-d')
+        if(isset($argv[3]) && $argv[3] == '-d')
             $this->daemonize = True;
     }
 
